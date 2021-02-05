@@ -20,8 +20,6 @@
                  [org.clojure/clojure "1.10.2"]
                  [org.clojure/tools.cli "1.0.194"]
                  [org.clojure/tools.logging "1.1.0"]
-                 [org.webjars.npm/bulma "0.9.1"]
-                 [org.webjars.npm/material-icons "0.3.1"]
                  [org.webjars/webjars-locator "0.40"]
                  [org.webjars/webjars-locator-jboss-vfs "0.1.0"]
                  [ring-webjars "0.2.0"]
