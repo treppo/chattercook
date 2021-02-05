@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+    <form action="/create-event" method="post">
+        {% csrf-field %}
+        <input type="text" name="name">
+        <button type="submit">Jetzt erstellen</button>
+    </form>
+</div>
+{% endblock %}

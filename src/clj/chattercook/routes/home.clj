@@ -2,8 +2,8 @@
   (:require
     [jaas.jwt :as jwt]
     [chattercook.layout :as layout]
+    [chattercook.domain.domain :as domain]
     [chattercook.config :refer [env]]
-    [clojure.java.io :as io]
     [chattercook.middleware :as middleware]
     [ring.util.response])
   (:import (java.util UUID)))
@@ -17,7 +17,7 @@
        :private-key (:jaas-private-key env)})))
 
 (defn home-page [request]
-  (layout/render request "home.html" {:docs (-> "docs/docs.md" io/resource slurp)}))
+  (layout/render request "home.html"))
 
 (defn room [request]
   (let [room-name "MyRoom"
@@ -39,15 +39,18 @@
                                         :room-name  room-name
                                         :tenant     (:jaas-tenant-name env)})))
 
-(defn about-page [request]
-  (layout/render request "about.html"))
+(defn create-event-form [request]
+  (layout/render request "create-event.html"))
+
+(defn event-created [request]
+  (layout/render request "event-created.html" {:name (domain/possessive (-> request :params :name))}))
 
 (defn home-routes []
   [""
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
    ["/" {:get home-page}]
+   ["/create-event" {:get create-event-form :post event-created}]
    ["/room" {:get room}]
-   ["/guest-room" {:get guest-room}]
-   ["/about" {:get about-page}]])
+   ["/guest-room" {:get guest-room}]])
 
