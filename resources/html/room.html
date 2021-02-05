@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="content">
+    <div id="video"></div>
+</main>
+<script src="https://8x8.vc/libs/external_api.min.js"></script>
+<script>
+    const domain = "8x8.vc"
+    const options = {
+        roomName: "{{ tenant }}/{{ room-name }}",
+        parentNode: document.querySelector('#video'),
+        jwt: "{{ jwt }}",
+        width: "100%",
+        height: 700,
+        configOverwrite: {
+            disableInviteFunctions: true,
+        },
+        interfaceConfigOverwrite: {
+            TOOLBAR_BUTTONS: [
+                'microphone', 'camera', 'closedcaptions', 'fullscreen', 'fodeviceselection', 'hangup', 'chat', 'videoquality', 'filmstrip', 'tileview', 'mute-everyone'
+            ],
+        }
+    }
+    api = new JitsiMeetExternalAPI(domain, options)
+</script>
+{% endblock %}
