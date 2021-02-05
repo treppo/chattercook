@@ -21,5 +21,19 @@
         }
     }
     api = new JitsiMeetExternalAPI(domain, options)
+
+    if (navigator.share) {
+        const shareButton = document.createElement("a")
+        shareButton.href = "#"
+        shareButton.innerText = "Share"
+        shareButton.addEventListener("click", event => {
+            navigator.share({
+                url: "https://chattercook.heroku.com/guest-room",
+                title: "Einladung",
+                text: "Max lädt dich ein zu seiner Kochgruppe. Es wird Trüffelrisotto gekocht.",
+            })
+        })
+        document.querySelector("#video").insertAdjacentElement("afterend", shareButton)
+    }
 </script>
 {% endblock %}
