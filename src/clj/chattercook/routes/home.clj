@@ -23,19 +23,21 @@
   (let [room-name "MyRoom"
         options {:room-name  room-name
                  :moderator? true
-                 :user-id    (str (UUID/randomUUID))}]
-    (layout/render request "room.html" {:jwt       (signed-jwt options)
-                                        :room-name room-name
-                                        :tenant    (:jaas-tenant-name env)})))
+                 :user-id    (str (UUID/randomUUID))
+                 :user-name  "Max"}]
+    (layout/render request "room.html" {:jwt        (signed-jwt options)
+                                        :room-name  room-name
+                                        :tenant     (:jaas-tenant-name env)})))
 
 (defn guest-room [request]
   (let [room-name "MyRoom"
         options {:room-name  room-name
                  :moderator? false
-                 :user-id    (str (UUID/randomUUID))}]
-    (layout/render request "room.html" {:jwt       (signed-jwt options)
-                                        :room-name room-name
-                                        :tenant    (:jaas-tenant-name env)})))
+                 :user-id    (str (UUID/randomUUID))
+                 :user-name  "Stefan"}]
+    (layout/render request "room.html" {:jwt        (signed-jwt options)
+                                        :room-name  room-name
+                                        :tenant     (:jaas-tenant-name env)})))
 
 (defn about-page [request]
   (layout/render request "about.html"))

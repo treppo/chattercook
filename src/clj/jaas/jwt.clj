@@ -28,7 +28,8 @@
         (.withClaim "room" (:room-name options))
         (.withClaim "sub" (:tenant options))
         (.withClaim "context" {"user"     {"moderator" (:moderator? options)
-                                           "id"        (:user-id options)}
+                                           "id"        (:user-id options)
+                                           "name"      (:user-name options)}
                                "features" {"livestreaming" false
                                            "recording"     false
                                            "transcription" false
