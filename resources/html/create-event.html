@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<form action="/create-event" method="post">
-    {% csrf-field %}
-    <label>
-        <input type="text" name="name" placeholder="Vorname">
-    </label>
-    <button class="button" type="submit">Jetzt erstellen</button>
-</form>
+<main class="main">
+    <h1>Erstelle deine eigene Kochgruppe</h1>
+    <form action="/create-event" method="post">
+        {% csrf-field %}
+        <label>
+            <input type="text" name="name" placeholder="Vorname">
+        </label>
+        <button class="button" type="submit">Jetzt erstellen</button>
+    </form>
+</main>
 {% endblock %}

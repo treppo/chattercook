@@ -10,13 +10,14 @@
     {% style "/css/screen.css" %}
 </head>
 <body>
+{% block brand %}
 <div class="brand">
     <a href="/"><img width="58px" height="58px" src="/img/logo.png" alt="Chattercook logo"></a>
 </div>
-<main class="main">
-    {% block content %}
-    {% endblock %}
-</main>
+{% endblock %}
+
+{% block content %}
+{% endblock %}
 
 {% block page-scripts %}
 {% endblock %}

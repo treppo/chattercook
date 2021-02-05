@@ -1,23 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content">
-    <h1 id="event-name">{{ name }} Kochgruppe</h1>
-
-</div>
-<script>
-    if (navigator.share) {
-        const shareButton = document.createElement("a")
-        shareButton.href = "#"
-        shareButton.innerText = "Share"
-        shareButton.addEventListener("click", event => {
-            navigator.share({
-                url: "https://chattercook.heroku.com/guest-room",
-                title: "Einladung",
-                text: "Max lädt dich ein zu seiner Kochgruppe. Es wird Trüffelrisotto gekocht.",
+<main class="main">
+    <div class="content">
+        <h1 id="event-name">{{ name }} Kochgruppe</h1>
+        <a href="/room" class="button">Eintreten</a>
+    </div>
+    <script>
+        if (navigator.share) {
+            const shareButton = document.createElement("a")
+            shareButton.href = "#"
+            shareButton.innerText = "Share"
+            shareButton.addEventListener("click", event => {
+                navigator.share({
+                    url: "https://chattercook.heroku.com/guest-room",
+                    title: "Einladung",
+                    text: "Max lädt dich ein zu seiner Kochgruppe. Es wird Trüffelrisotto gekocht.",
+                })
             })
-        })
-        document.querySelector("#event-name").insertAdjacentElement("afterend", shareButton)
-    }
-</script>
-
+            document.querySelector("#event-name").insertAdjacentElement("afterend", shareButton)
+        }
+    </script>
+</main>
 {% endblock %}

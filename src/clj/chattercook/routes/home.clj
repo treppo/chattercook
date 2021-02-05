@@ -29,16 +29,6 @@
                                         :room-name  room-name
                                         :tenant     (:jaas-tenant-name env)})))
 
-(defn guest-room [request]
-  (let [room-name "MyRoom"
-        options {:room-name  room-name
-                 :moderator? false
-                 :user-id    (str (UUID/randomUUID))
-                 :user-name  "Stefan"}]
-    (layout/render request "room.html" {:jwt        (signed-jwt options)
-                                        :room-name  room-name
-                                        :tenant     (:jaas-tenant-name env)})))
-
 (defn create-event-form [request]
   (layout/render request "create-event.html"))
 
@@ -51,6 +41,5 @@
                  middleware/wrap-formats]}
    ["/" {:get home-page}]
    ["/create-event" {:get create-event-form :post event-created}]
-   ["/room" {:get room}]
-   ["/guest-room" {:get guest-room}]])
+   ["/room" {:get room}]])
 
