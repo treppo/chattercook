@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 <main class="main">
-    <h1>Erstelle deine eigene Kochgruppe</h1>
+    <h1>Erstelle deine Kochgruppe</h1>
     <form action="/create-event" method="post">
         {% csrf-field %}
         <label>
-            <input type="text" name="name" placeholder="Vorname">
+            <input type="text" name="name" placeholder="Vorname" autocomplete="given-name" required>
+        </label>
+        <label>
+            <input type="datetime-local" name="date-time" placeholder="Datum" min="{{ min-date-time }}" max="{{ max-date-time }}" required
+                   pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}">
         </label>
         <button class="button" type="submit">Jetzt erstellen</button>
     </form>

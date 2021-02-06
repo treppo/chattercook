@@ -2,7 +2,8 @@
 {% block content %}
 <main class="main">
     <div class="content">
-        <h1 id="event-name">{{ name }} Kochgruppe</h1>
+        <h1>Deine Kochgruppe</h1>
+        <p id="event-date">Am {{ event-date }} um {{ event-time }} Uhr</p>
         <a href="/room" class="button">Eintreten</a>
     </div>
     <script>
@@ -14,10 +15,10 @@
                 navigator.share({
                     url: "https://chattercook.heroku.com/guest-room",
                     title: "Einladung",
-                    text: "Max lädt dich ein zu seiner Kochgruppe. Es wird Trüffelrisotto gekocht.",
+                    text: "Du wurdest zu {{ name }} Kochgruppe eingeladen. Es wird Trüffelrisotto gekocht.",
                 })
             })
-            document.querySelector("#event-name").insertAdjacentElement("afterend", shareButton)
+            document.querySelector(".content").insertAdjacentElement("beforeend", shareButton)
         }
     </script>
 </main>

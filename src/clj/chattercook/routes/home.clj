@@ -1,5 +1,6 @@
 (ns chattercook.routes.home
   (:require
+    [java-time :as time]
     [jaas.jwt :as jwt]
     [chattercook.layout :as layout]
     [chattercook.domain.domain :as domain]
@@ -16,30 +17,33 @@
        :tenant      (:jaas-tenant-name env)
        :private-key (:jaas-private-key env)})))
 
-(defn home-page [request]
-  (layout/render request "home.html"))
-
 (defn room [request]
   (let [room-name "MyRoom"
         options {:room-name  room-name
                  :moderator? true
                  :user-id    (str (UUID/randomUUID))
                  :user-name  "Max"}]
-    (layout/render request "room.html" {:jwt        (signed-jwt options)
-                                        :room-name  room-name
-                                        :tenant     (:jaas-tenant-name env)})))
+    (layout/render request "room.html" {:jwt       (signed-jwt options)
+                                        :room-name room-name
+                                        :tenant    (:jaas-tenant-name env)})))
 
 (defn create-event-form [request]
-  (layout/render request "create-event.html"))
+  (layout/render request "create-event.html"
+                 {:min-date-time (domain/earliest-event-time)
+                  :max-date-time (domain/latest-event-time)}))
 
 (defn event-created [request]
-  (layout/render request "event-created.html" {:name (domain/possessive (-> request :params :name))}))
+  (let [name (-> request :params :name)
+        date-time (-> request :params :date-time)]
+    (layout/render request "event-created.html"
+                   {:name       (domain/possessive name),
+                    :event-date (time/format "dd.MM.yyyy" (time/local-date-time date-time))
+                    :event-time (time/format "HH:mm" (time/local-date-time date-time))})))
 
 (defn home-routes []
   [""
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
-   ["/" {:get home-page}]
    ["/create-event" {:get create-event-form :post event-created}]
    ["/room" {:get room}]])
 
