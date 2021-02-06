@@ -20,9 +20,9 @@
 (defn room [request]
   (let [room-name "MyRoom"
         options {:room-name  room-name
-                 :moderator? true
+                 :moderator? false
                  :user-id    (str (UUID/randomUUID))
-                 :user-name  "Max"}]
+                 :user-name  (-> request :params :name)}]
     (layout/render request "room.html" {:jwt       (signed-jwt options)
                                         :room-name room-name
                                         :tenant    (:jaas-tenant-name env)})))
@@ -36,9 +36,10 @@
   (let [name (-> request :params :name)
         date-time (-> request :params :date-time)]
     (layout/render request "event-created.html"
-                   {:name       (domain/possessive name),
-                    :event-date (time/format "dd.MM.yyyy" (time/local-date-time date-time))
-                    :event-time (time/format "HH:mm" (time/local-date-time date-time))})))
+                   {:name            name
+                    :possessive-name (domain/possessive name),
+                    :event-date      (time/format "dd.MM.yyyy" (time/local-date-time date-time))
+                    :event-time      (time/format "HH:mm" (time/local-date-time date-time))})))
 
 (defn home-routes []
   [""
