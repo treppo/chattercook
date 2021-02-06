@@ -46,7 +46,10 @@ h1 {
 
 .button {
     font-family: 'Playfair Display SC', serif;
-    padding: .5rem 1.75rem 0.6875rem;
+    padding: 0 1.75rem;
+    line-height: calc(1em + 2 * .75rem);
+    height: calc(1em + 2 * .75rem);
+    display: inline-block;
     background-color: var(--primary-color);
     color: var(--secondary-color);
     text-decoration: none;
