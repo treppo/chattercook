@@ -71,3 +71,17 @@ input {
     width: calc(100% - 2.5rem);
     margin-bottom: 1.5rem;
 }
+
+/* A few custom styles for datetime-local inputs */
+input[type="datetime-local"] {
+    appearance: none;
+    -webkit-appearance: none;
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
+input[type="datetime-local"], focus {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}

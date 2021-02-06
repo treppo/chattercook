@@ -29,8 +29,9 @@
 
 (defn create-event-form [request]
   (layout/render request "create-event.html"
-                 {:min-date-time (domain/earliest-event-time)
-                  :max-date-time (domain/latest-event-time)}))
+                 {:suggested-date-time (domain/suggested-event-time)
+                  :min-date-time       (domain/earliest-event-time)
+                  :max-date-time       (domain/latest-event-time)}))
 
 (defn event-created [request]
   (let [name (-> request :params :name)
