@@ -78,7 +78,7 @@
         event (db/get-event {:id id})]
     (layout/render request "event.html"
                    {:creator (domain/possessive (:creator event))
-                    :dish (domain/possessive (:dish event))
+                    :dish (:dish event)
                     :event-date (time/format "dd.MM.yyyy" (:datetime event))
                     :event-time (time/format "HH:mm" (:datetime event))
                     :guests (map :name guests)})))
