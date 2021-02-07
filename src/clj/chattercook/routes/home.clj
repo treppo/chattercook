@@ -42,12 +42,15 @@
                     :possessive-name (domain/possessive name),
                     :event-date      (time/format "dd.MM.yyyy" (time/local-date-time date-time))
                     :event-time      (time/format "HH:mm" (time/local-date-time date-time))
-                    :dish            dish})))
+                    :dish            dish
+                    :invitation-url  "/invitation/abcdefg/"})))
 
 (defn home-routes []
   [""
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
-   ["/create-event" {:get create-event-form :post event-created}]
-   ["/room" {:get room}]])
+   ["/create-event" {:get create-event-form :post event-created}] ; deprecated
+   ["/create-event/" {:get create-event-form :post event-created}]
+   ["/event/" {:get create-event-form :post event-created}]
+   ["/room/" {:get room}]])
 

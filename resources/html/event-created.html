@@ -7,22 +7,36 @@
             Am {{ event-date }} um {{ event-time }} Uhr<br>
             Gekocht wird {{ dish }}
         </p>
-        <a href="/room?name={{ name }}" class="button">Eintreten</a>
+        <a href="/room/?name={{ name }}" class="button">Eintreten</a>
         <div>
             <a href="#" class="button" id="share-button">Freunde einladen</a>
         </div>
     </div>
     <script>
+        const shareButton = document.querySelector("#share-button");
+        const invitationUrl = window.location.origin + "{{ invitation-url }}";
+
         if (navigator.share) {
-            const shareButton = document.querySelector("#share-button")
             shareButton.addEventListener("click", event => {
-                navigator.share({
-                    url: "https://chattercook.heroku.com/guest-room",
-                    title: "Einladung",
-                    text: "Du wurdest zu {{ possessive-name }} Kochgruppe eingeladen. Es wird Trüffelrisotto gekocht.",
-                })
-            })
-            document.querySelector(".content").insertAdjacentElement("beforeend", shareButton)
+                navigator
+                    .share({
+                        url: invitationUrl,
+                        title: "Einladung",
+                        text: "Du wurdest zu {{ possessive-name }} Kochgruppe eingeladen. Es wird Trüffelrisotto gekocht.",
+                    })
+                    // ignore, it was just cancelled by user
+                    .catch((e) => null);
+            });
+        } else {
+            const shareLabel = document.createElement("label");
+            shareLabel.innerText = "Freunde einladen:"
+            const shareLink = document.createElement("input");
+            shareLink.id = "share-link";
+            shareLink.value = invitationUrl;
+            shareLink.readOnly = true;
+            shareLabel.insertAdjacentElement("beforeend", shareLink);
+            shareButton.insertAdjacentElement("afterend", shareLabel);
+            shareButton.remove()
         }
     </script>
 </main>

@@ -2,7 +2,7 @@
 {% block content %}
 <main class="main">
     <h1>Erstelle deine Kochgruppe</h1>
-    <form action="/create-event" method="post">
+    <form action="/create-event/" method="post">
         {% csrf-field %}
         <label>
             <input type="text" name="name" placeholder="Vorname" autocomplete="given-name" required>
