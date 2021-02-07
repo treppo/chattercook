@@ -6,7 +6,7 @@
     [chattercook.domain.domain :as domain]
     [chattercook.config :refer [env]]
     [chattercook.middleware :as middleware]
-    [ring.util.response]
+    [ring.util.response :as response]
     [chattercook.db.core :refer [*db*] :as db])
   (:import (java.util UUID)
            (java.time LocalDateTime)))
@@ -40,7 +40,7 @@
                :date-time (-> request :params :date-time (LocalDateTime/parse))
                :dish      (-> request :params :dish)}
         id (domain/create-event event)]
-    (ring.util.response/redirect (str "/event-created/" id "/") :see-other)))
+    (response/redirect (str "/event-created/" id "/") :see-other)))
 
 (defn event-created [request]
   (let [id (-> request :path-params :id)
@@ -54,7 +54,7 @@
                     :invitation-url  (str "/join/" id "/")})))
 
 (defn redirect-to-create [request]
-  (ring.util.response/redirect "/create-event/"))
+  (response/redirect "/create-event/"))
 
 (defn join [request]
   (let [id (-> request :path-params :id)
@@ -70,7 +70,7 @@
   (let [id (-> request :params :id)
         name (-> request :params :name)]
     (domain/join id name)
-    (ring.util.response/redirect (str "/event/" id "/"))))
+    (response/redirect (str "/event/" id "/"))))
 
 (defn event [request]
   (let [id (-> request :path-params :id)
