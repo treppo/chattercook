@@ -24,6 +24,7 @@
         (fill {:tag :input :name :name} "Max" keys/tab)
         (fill {:tag :input :name :date-time} "2021-02-07T19:30" keys/tab)
         (fill {:tag :input :name :dish} "Trüffelrisotto" keys/tab)
+        (fill {:tag :textarea :name :ingredients} "100g Risottoreis\n1 Zwiebel\nTrüffelöl" keys/tab)
         (click {:tag :button :fn/text "Weiter geht's"}))
 
       (is (true? (has-text? browser {:tag :h1} "Deine Kochgruppe")))

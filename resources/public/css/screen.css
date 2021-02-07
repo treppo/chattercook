@@ -64,16 +64,27 @@ label {
     text-align: left;
 }
 
-input {
+input, textarea {
     background-color: rgba(255, 255, 255, .2);
     border: none;
     color: white;
     padding: 0 1.25rem;
-    height: 3rem;
-    line-height: 3rem;
     width: calc(100% - 2.5rem);
     margin-bottom: 1.5rem;
-    display: inline-block !important;
+    display: block !important;
+}
+
+input {
+    height: 3rem;
+    line-height: 3rem;
+}
+
+textarea {
+    height: 15rem;
+    line-height: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    resize: none;
 }
 
 input[type="datetime-local"] {
