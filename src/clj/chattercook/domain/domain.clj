@@ -21,7 +21,7 @@
 (defn latest-event-time []
   (str (time/plus (time/local-date) (time/months 2)) "T" (time/format "HH:mm" (time/local-time))))
 
-(defn create-event []
+(defn create-event [{:keys [creator date-time dish]}]
   (let [id (FriendlyId/createFriendlyId)]
-    (db/create-event! {:id id})
+    (db/create-event! {:id id :creator creator :datetime date-time :dish dish})
     id))

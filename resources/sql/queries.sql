@@ -1,8 +1,8 @@
 -- :name create-event! :! :n
 -- :doc creates a new event record
 INSERT INTO events
-(id)
-VALUES (:id)
+(id, datetime, dish, creator)
+VALUES (:id, :datetime, :dish, :creator)
 
 -- :name get-event :? :1
 -- :doc retrieves a event record given the id

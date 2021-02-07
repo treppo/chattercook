@@ -1,0 +1,4 @@
+ALTER TABLE events
+    ADD COLUMN creator  VARCHAR(100) NOT NULL DEFAULT 'Nobody',
+    ADD COLUMN datetime TIMESTAMP    NOT NULL DEFAULT NOW(),
+    ADD COLUMN dish     VARCHAR(200) NOT NULL DEFAULT 'Wiener Schnitzel vegan'

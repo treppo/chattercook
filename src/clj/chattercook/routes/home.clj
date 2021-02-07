@@ -1,5 +1,6 @@
 (ns chattercook.routes.home
   (:require
+    [clojure.pprint :refer [pprint]]
     [java-time :as time]
     [jaas.jwt :as jwt]
     [chattercook.layout :as layout]
@@ -8,7 +9,8 @@
     [chattercook.middleware :as middleware]
     [ring.util.response]
     [chattercook.db.core :refer [*db*] :as db])
-  (:import (java.util UUID)))
+  (:import (java.util UUID)
+           (java.time LocalDateTime)))
 
 (defn signed-jwt [options]
   (jwt/signed-jwt
@@ -34,17 +36,26 @@
                   :min-date-time       (domain/earliest-event-time)
                   :max-date-time       (domain/latest-event-time)}))
 
-(defn event-created [request]
+(defn create-event [request]
   (let [name (-> request :params :name)
-        date-time (-> request :params :date-time)
-        dish (-> request :params :dish)]
+        date-time (-> request :params :date-time (LocalDateTime/parse))
+        dish (-> request :params :dish)
+        id (domain/create-event {:creator name :date-time date-time :dish dish})]
+    (ring.util.response/redirect (str "/event/" id "/") :see-other)))
+
+(defn event [request]
+  (let [id (-> request :path-params :id)
+        event (db/get-event {:id id})
+        name (:creator event)
+        date-time (:datetime event)
+        dish (:dish event)]
     (layout/render request "event-created.html"
                    {:name            name
                     :possessive-name (domain/possessive name),
                     :event-date      (time/format "dd.MM.yyyy" (time/local-date-time date-time))
                     :event-time      (time/format "HH:mm" (time/local-date-time date-time))
                     :dish            dish
-                    :invitation-url  (str "/invitation/" (domain/create-event) "/")})))
+                    :invitation-url  (str "/invitation/" id "/")})))
 
 (defn redirect-to-create [request]
   (ring.util.response/redirect "/create-event/"))
@@ -55,7 +66,7 @@
                  middleware/wrap-formats]}
    ["/" {:get redirect-to-create}]
    ["/create-event" {:get redirect-to-create}]              ; deprecated
-   ["/create-event/" {:get create-event-form :post event-created}]
-   ["/event/" {:get create-event-form :post event-created}]
+   ["/create-event/" {:get create-event-form :post create-event}]
+   ["/event/:id/" {:get event}]
    ["/room/" {:get room}]])
 
