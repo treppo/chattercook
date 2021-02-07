@@ -1,0 +1,2 @@
+CREATE TABLE events
+(id VARCHAR(22) PRIMARY KEY);

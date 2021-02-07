@@ -2,7 +2,9 @@
   (:require
     [clojure.test :refer [deftest testing is use-fixtures]]
     [ring.mock.request :refer [request]]
+    [luminus-migrations.core :as migrations]
     [chattercook.handler :refer [app]]
+    [chattercook.config :refer [env]]
     [mount.core :as mount]
     [etaoin.api :refer :all]
     [etaoin.keys :as keys]))
@@ -12,7 +14,9 @@
   (fn [f]
     (mount/start #'chattercook.config/env
                  #'chattercook.handler/app-routes
-                 #'chattercook.core/http-server)
+                 #'chattercook.core/http-server
+                 #'chattercook.db.core/*db*)
+    (migrations/migrate ["migrate"] (select-keys env [:database-url]))
     (f)))
 
 (defn path [p] (str "http://localhost:3001" p))
