@@ -91,3 +91,7 @@ input[type="datetime-local"] {
     appearance: none;
     -webkit-appearance: none;
 }
+
+ul {
+    list-style: none;
+}
