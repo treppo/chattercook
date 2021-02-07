@@ -61,27 +61,22 @@ h1 {
 
 label {
     display: block;
+    text-align: left;
 }
 
 input {
     background-color: rgba(255, 255, 255, .2);
     border: none;
     color: white;
-    padding: 1rem 1.25rem;
+    padding: 0 1.25rem;
+    height: 3rem;
+    line-height: 3rem;
     width: calc(100% - 2.5rem);
     margin-bottom: 1.5rem;
+    display: inline-block !important;
 }
 
-/* A few custom styles for datetime-local inputs */
 input[type="datetime-local"] {
     appearance: none;
     -webkit-appearance: none;
-    display: inline-block !important;
-    visibility: visible !important;
-}
-
-input[type="datetime-local"], focus {
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
 }
