@@ -48,4 +48,6 @@
         (click {:tag :button :fn/text "Ja, ich bin dabei"}))
 
       (is (true? (has-text? browser {:tag :h1} "Max' Kochgruppe")))
+      (is (true? (has-text? browser :event-info "Gekocht wird Trüffelrisotto")))
+      (is (true? (has-text? browser :event-info "Am 07.02.2021 um 19:30 Uhr")))
       (is (true? (has-text? browser :guests "Indigo"))))))
