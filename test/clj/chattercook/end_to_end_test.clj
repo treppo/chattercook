@@ -44,4 +44,6 @@
 
       (doto browser
         (fill {:tag :input :name :name} "Indigo" keys/tab)
-        (click {:tag :button :fn/text "Ja, ich bin dabei"})))))
+        (click {:tag :button :fn/text "Ja, ich bin dabei"}))
+
+      (is (true? (has-text? browser :guests "Indigo"))))))

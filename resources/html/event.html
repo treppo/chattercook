@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="main">
+    <div class="content">
+        <h1>Kochgruppe</h1>
+        <p id="event-info">
+            Am {{ event-date }} um {{ event-time }} Uhr<br>
+            Gekocht wird {{ dish }}
+        </p>
+        <h2>Bestätigte Teilnehmer dieser Kochgruppe</h2>
+        {% if guests %}
+        <ul id="guests">
+            {% for guest in guests %}
+            <li>{{ guest }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div>
+            <a href="#" class="button" id="share-button">Freunde einladen</a>
+        </div>
+    </div>
+</main>
+{% endblock %}

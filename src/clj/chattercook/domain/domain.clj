@@ -25,3 +25,6 @@
   (let [id (FriendlyId/createFriendlyId)]
     (db/create-event! {:id id :creator creator :datetime date-time :dish dish})
     id))
+
+(defn join [id name]
+  (db/add-guest! {:event-id id :name name}))

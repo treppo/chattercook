@@ -40,9 +40,9 @@
                :date-time (-> request :params :date-time (LocalDateTime/parse))
                :dish      (-> request :params :dish)}
         id (domain/create-event event)]
-    (ring.util.response/redirect (str "/event/" id "/") :see-other)))
+    (ring.util.response/redirect (str "/event-created/" id "/") :see-other)))
 
-(defn event [request]
+(defn event-created [request]
   (let [id (-> request :path-params :id)
         event (db/get-event {:id id})]
     (layout/render request "event-created.html"
@@ -51,19 +51,32 @@
                     :event-date      (time/format "dd.MM.yyyy" (:datetime event))
                     :event-time      (time/format "HH:mm" (:datetime event))
                     :dish            (:dish event)
-                    :invitation-url  (str "/invitation/" id "/")})))
+                    :invitation-url  (str "/join/" id "/")})))
 
 (defn redirect-to-create [request]
   (ring.util.response/redirect "/create-event/"))
 
-(defn register-guest [request]
+(defn join [request]
   (let [id (-> request :path-params :id)
         event (db/get-event {:id id})]
-    (layout/render request "register-guest.html"
-                   {:name       (:creator event)
+    (layout/render request "join.html"
+                   {:id         (:id event)
+                    :name       (:creator event)
                     :dish       (:dish event)
                     :event-date (time/format "dd.MM.yyyy" (:datetime event))
                     :event-time (time/format "HH:mm" (:datetime event))})))
+
+(defn joined [request]
+  (let [id (-> request :params :id)
+        name (-> request :params :name)]
+    (domain/join id name)
+    (ring.util.response/redirect (str "/event/" id "/"))))
+
+(defn event [request]
+  (let [id (-> request :path-params :id)
+        guests (db/get-guests {:event-id id})]
+    (layout/render request "event.html"
+                   {:guests (map :name guests)})))
 
 (defn home-routes []
   [""
@@ -72,7 +85,9 @@
    ["/" {:get redirect-to-create}]
    ["/create-event" {:get redirect-to-create}]              ; deprecated
    ["/create-event/" {:get create-event-form :post create-event}]
+   ["/event-created/:id/" {:get event-created}]
+   ["/join/:id/" {:get join}]
+   ["/join/" {:post joined}]
    ["/event/:id/" {:get event}]
-   ["/invitation/:id/" {:get register-guest}]
    ["/room/" {:get room}]])
 
