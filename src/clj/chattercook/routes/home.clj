@@ -35,12 +35,14 @@
 
 (defn event-created [request]
   (let [name (-> request :params :name)
-        date-time (-> request :params :date-time)]
+        date-time (-> request :params :date-time)
+        dish (-> request :params :dish)]
     (layout/render request "event-created.html"
                    {:name            name
                     :possessive-name (domain/possessive name),
                     :event-date      (time/format "dd.MM.yyyy" (time/local-date-time date-time))
-                    :event-time      (time/format "HH:mm" (time/local-date-time date-time))})))
+                    :event-time      (time/format "HH:mm" (time/local-date-time date-time))
+                    :dish            dish})))
 
 (defn home-routes []
   [""

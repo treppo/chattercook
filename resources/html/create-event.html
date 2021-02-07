@@ -9,9 +9,12 @@
         </label>
         <label>
             <input type="datetime-local" name="date-time" placeholder="Datum & Uhrzeit" value="{{ suggested-date-time }}"
-                   min="{{ min-date-time }}" max="{{ max-date-time }}" pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}" step="900" required>
+                   min="{{ min-date-time }}" max="{{ max-date-time }}" step="900" required>
         </label>
-        <button class="button" type="submit">Jetzt erstellen</button>
+        <label>
+            <input type="text" name="dish" placeholder="Name des Gerichts" required>
+        </label>
+        <button class="button" type="submit">Weiter geht's</button>
     </form>
 </main>
 {% endblock %}

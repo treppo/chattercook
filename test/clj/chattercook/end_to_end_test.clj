@@ -23,7 +23,9 @@
         (go "http://localhost:3001/create-event")
         (fill {:tag :input :name :name} "Max" keys/tab)
         (fill {:tag :input :name :date-time} "2021-02-07T19:30" keys/tab)
-        (click {:tag :button :fn/text "Jetzt erstellen"}))
+        (fill {:tag :input :name :dish} "Trüffelrisotto" keys/tab)
+        (click {:tag :button :fn/text "Weiter geht's"}))
 
       (is (true? (has-text? browser {:tag :h1} "Deine Kochgruppe")))
-      (is (true? (has-text? browser :event-date "Am 07.02.2021 um 19:30 Uhr"))))))
+      (is (true? (has-text? browser :event-info "Am 07.02.2021 um 19:30 Uhr")))
+      (is (true? (has-text? browser :event-info "Gekocht wird Trüffelrisotto"))))))

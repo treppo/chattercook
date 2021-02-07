@@ -3,7 +3,10 @@
 <main class="main">
     <div class="content">
         <h1>Deine Kochgruppe</h1>
-        <p id="event-date">Am {{ event-date }} um {{ event-time }} Uhr</p>
+        <p id="event-info">
+            Am {{ event-date }} um {{ event-time }} Uhr<br>
+            Gekocht wird {{ dish }}
+        </p>
         <a href="/room?name={{ name }}" class="button">Eintreten</a>
         <div>
             <a href="#" class="button" id="share-button">Freunde einladen</a>
