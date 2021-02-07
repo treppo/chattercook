@@ -45,11 +45,15 @@
                     :dish            dish
                     :invitation-url  "/invitation/abcdefg/"})))
 
+(defn redirect-to-create [request]
+  (ring.util.response/redirect "/create-event/"))
+
 (defn home-routes []
   [""
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
-   ["/create-event" {:get create-event-form :post event-created}] ; deprecated
+   ["/" {:get redirect-to-create}]
+   ["/create-event" {:get redirect-to-create}]              ; deprecated
    ["/create-event/" {:get create-event-form :post event-created}]
    ["/event/" {:get create-event-form :post event-created}]
    ["/room/" {:get room}]])
