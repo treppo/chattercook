@@ -38,5 +38,10 @@
       (is (true? (has-text? browser :event-info "Am 07.02.2021 um 19:30 Uhr")))
       (is (true? (has-text? browser :event-info "Gekocht wird Trüffelrisotto")))
 
-      (is (= (path (str "/invitation/" (:id (db/get-latest-event)) "/"))
-             (get-element-value browser :share-link))))))
+      (go browser (get-element-value browser :share-link))
+      (is (true? (has-text? browser :event-info "Gekocht wird Trüffelrisotto")))
+      (is (true? (has-text? browser :event-info "Am 07.02.2021 um 19:30 Uhr")))
+
+      (doto browser
+        (fill {:tag :input :name :name} "Indigo" keys/tab)
+        (click {:tag :button :fn/text "Ja, ich bin dabei"})))))

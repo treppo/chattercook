@@ -1,6 +1,5 @@
 (ns chattercook.routes.home
   (:require
-    [clojure.pprint :refer [pprint]]
     [java-time :as time]
     [jaas.jwt :as jwt]
     [chattercook.layout :as layout]
@@ -37,28 +36,34 @@
                   :max-date-time       (domain/latest-event-time)}))
 
 (defn create-event [request]
-  (let [name (-> request :params :name)
-        date-time (-> request :params :date-time (LocalDateTime/parse))
-        dish (-> request :params :dish)
-        id (domain/create-event {:creator name :date-time date-time :dish dish})]
+  (let [event {:creator   (-> request :params :name)
+               :date-time (-> request :params :date-time (LocalDateTime/parse))
+               :dish      (-> request :params :dish)}
+        id (domain/create-event event)]
     (ring.util.response/redirect (str "/event/" id "/") :see-other)))
 
 (defn event [request]
   (let [id (-> request :path-params :id)
-        event (db/get-event {:id id})
-        name (:creator event)
-        date-time (:datetime event)
-        dish (:dish event)]
+        event (db/get-event {:id id})]
     (layout/render request "event-created.html"
-                   {:name            name
-                    :possessive-name (domain/possessive name),
-                    :event-date      (time/format "dd.MM.yyyy" (time/local-date-time date-time))
-                    :event-time      (time/format "HH:mm" (time/local-date-time date-time))
-                    :dish            dish
+                   {:name            (:creator event)
+                    :possessive-name (domain/possessive (:creator event)),
+                    :event-date      (time/format "dd.MM.yyyy" (:datetime event))
+                    :event-time      (time/format "HH:mm" (:datetime event))
+                    :dish            (:dish event)
                     :invitation-url  (str "/invitation/" id "/")})))
 
 (defn redirect-to-create [request]
   (ring.util.response/redirect "/create-event/"))
+
+(defn register-guest [request]
+  (let [id (-> request :path-params :id)
+        event (db/get-event {:id id})]
+    (layout/render request "register-guest.html"
+                   {:name       (:creator event)
+                    :dish       (:dish event)
+                    :event-date (time/format "dd.MM.yyyy" (:datetime event))
+                    :event-time (time/format "HH:mm" (:datetime event))})))
 
 (defn home-routes []
   [""
@@ -68,5 +73,6 @@
    ["/create-event" {:get redirect-to-create}]              ; deprecated
    ["/create-event/" {:get create-event-form :post create-event}]
    ["/event/:id/" {:get event}]
+   ["/invitation/:id/" {:get register-guest}]
    ["/room/" {:get room}]])
 

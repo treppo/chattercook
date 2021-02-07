@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="main">
+    <h1>Du bist zu meiner Kochgruppe eingeladen, ich freu mich auf Dich. Lieben Gruß, {{ name }}.</h1>
+    <p id="event-info">
+        Am {{ event-date }} um {{ event-time }} Uhr<br>
+        Gekocht wird {{ dish }}
+    </p>
+    <form action="/register-guest/" method="post">
+        {% csrf-field %}
+        <label>
+            <input type="text" name="name" placeholder="Vorname" autocomplete="given-name" required>
+        </label>
+        <button class="button" type="submit">Ja, ich bin dabei</button>
+    </form>
+</main>
+{% endblock %}
