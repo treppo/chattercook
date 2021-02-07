@@ -6,7 +6,8 @@
     [chattercook.domain.domain :as domain]
     [chattercook.config :refer [env]]
     [chattercook.middleware :as middleware]
-    [ring.util.response])
+    [ring.util.response]
+    [chattercook.db.core :refer [*db*] :as db])
   (:import (java.util UUID)))
 
 (defn signed-jwt [options]
@@ -43,7 +44,7 @@
                     :event-date      (time/format "dd.MM.yyyy" (time/local-date-time date-time))
                     :event-time      (time/format "HH:mm" (time/local-date-time date-time))
                     :dish            dish
-                    :invitation-url  "/invitation/abcdefg/"})))
+                    :invitation-url  (str "/invitation/" (domain/create-event) "/")})))
 
 (defn redirect-to-create [request]
   (ring.util.response/redirect "/create-event/"))

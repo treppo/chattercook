@@ -9,3 +9,8 @@ VALUES (:id)
 SELECT * FROM events
 WHERE id = :id
 
+-- :name get-latest-event :? :1
+-- :doc retrieves latest event record
+SELECT * FROM events
+ORDER BY created_at DESC
+LIMIT 1

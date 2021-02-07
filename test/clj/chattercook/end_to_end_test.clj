@@ -7,7 +7,8 @@
     [chattercook.config :refer [env]]
     [mount.core :as mount]
     [etaoin.api :refer :all]
-    [etaoin.keys :as keys]))
+    [etaoin.keys :as keys]
+    [chattercook.db.core :refer [*db*] :as db]))
 
 (use-fixtures
   :once
@@ -36,4 +37,6 @@
       (is (true? (has-text? browser {:tag :h1} "Deine Kochgruppe")))
       (is (true? (has-text? browser :event-info "Am 07.02.2021 um 19:30 Uhr")))
       (is (true? (has-text? browser :event-info "Gekocht wird Trüffelrisotto")))
-      (is (=  (path "/invitation/abcdefg/" ) (get-element-value browser :share-link))))))
+
+      (is (= (path (str "/invitation/" (:id (db/get-latest-event)) "/"))
+             (get-element-value browser :share-link))))))

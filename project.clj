@@ -29,7 +29,8 @@
                  [ring/ring-core "1.8.2"]
                  [ring/ring-defaults "0.3.2"]
                  [selmer "1.12.33"]
-                 [com.auth0/java-jwt "3.12.1"]]
+                 [com.auth0/java-jwt "3.12.1"]
+                 [com.devskiller.friendly-id/friendly-id "1.1.0"]]
 
   :min-lein-version "2.0.0"
 
@@ -42,31 +43,31 @@
   :plugins []
 
   :profiles
-  {:uberjar {:omit-source true
-             :aot :all
-             :uberjar-name "chattercook.jar"
-             :source-paths ["env/prod/clj" ]
-             :resource-paths ["env/prod/resources"]}
+  {:uberjar       {:omit-source    true
+                   :aot            :all
+                   :uberjar-name   "chattercook.jar"
+                   :source-paths   ["env/prod/clj"]
+                   :resource-paths ["env/prod/resources"]}
 
    :dev           [:project/dev :profiles/dev]
    :test          [:project/dev :project/test :profiles/test]
 
-   :project/dev  {:jvm-opts ["-Dconf=dev-config.edn" ]
-                  :dependencies [[pjstadig/humane-test-output "0.10.0"]
-                                 [prone "2020-01-17"]
-                                 [ring/ring-devel "1.8.2"]
-                                 [ring/ring-mock "0.4.0"]
-                                 [etaoin "0.4.1"]]
-                  :plugins      [[com.jakemccrary/lein-test-refresh "0.24.1"]
-                                 [jonase/eastwood "0.3.5"]]
+   :project/dev   {:jvm-opts       ["-Dconf=dev-config.edn"]
+                   :dependencies   [[pjstadig/humane-test-output "0.10.0"]
+                                    [prone "2020-01-17"]
+                                    [ring/ring-devel "1.8.2"]
+                                    [ring/ring-mock "0.4.0"]
+                                    [etaoin "0.4.1"]]
+                   :plugins        [[com.jakemccrary/lein-test-refresh "0.24.1"]
+                                    [jonase/eastwood "0.3.5"]]
 
-                  :source-paths ["env/dev/clj" ]
-                  :resource-paths ["env/dev/resources"]
-                  :repl-options {:init-ns user
-                                 :timeout 120000}
-                  :injections [(require 'pjstadig.humane-test-output)
-                               (pjstadig.humane-test-output/activate!)]}
-   :project/test {:jvm-opts ["-Dconf=test-config.edn" ]
-                  :resource-paths ["env/test/resources"] }
-   :profiles/dev {}
+                   :source-paths   ["env/dev/clj"]
+                   :resource-paths ["env/dev/resources"]
+                   :repl-options   {:init-ns user
+                                    :timeout 120000}
+                   :injections     [(require 'pjstadig.humane-test-output)
+                                    (pjstadig.humane-test-output/activate!)]}
+   :project/test  {:jvm-opts       ["-Dconf=test-config.edn"]
+                   :resource-paths ["env/test/resources"]}
+   :profiles/dev  {}
    :profiles/test {}})

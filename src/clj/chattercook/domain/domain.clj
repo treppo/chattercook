@@ -1,7 +1,9 @@
 (ns chattercook.domain.domain
   (:require
     [java-time :as time]
-    [clojure.string :as string]))
+    [clojure.string :as string]
+    [chattercook.db.core :refer [*db*] :as db])
+  (:import (com.devskiller.friendly_id FriendlyId)))
 
 (defn possessive [name]
   (if (some (fn [c] (string/ends-with? name c)) ["x" "s" "z" "ß" "ce"])
@@ -18,3 +20,8 @@
 
 (defn latest-event-time []
   (str (time/plus (time/local-date) (time/months 2)) "T" (time/format "HH:mm" (time/local-time))))
+
+(defn create-event []
+  (let [id (FriendlyId/createFriendlyId)]
+    (db/create-event! {:id id})
+    id))

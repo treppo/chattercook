@@ -1,8 +1,4 @@
-<h1 class="title">Congratulations, your <a class="alert-link" href="http://luminusweb.net">Luminus</a> site is ready!</h1>
-
-This page will help guide you through the first steps of building your site.
-
-<p class="title is-5">Why are you seeing this page?</p>
+# Chattercook
 
 The `home-routes` handler in the `luminusdiff.routes.home` namespace
 defines the route that invokes the `home-page` function whenever an HTTP
@@ -43,7 +39,7 @@ The HTML templates are written using [Selmer](https://github.com/yogthos/Selmer)
 
 
 
-<p class="title is-5">Organizing the routes</p>
+#### Organizing the routes
 
 The routes are aggregated and wrapped with middleware in the `luminusdiff.handler` namespace:
 
@@ -75,7 +71,7 @@ A default route group is added to handle the `404` case.
 The `home-routes` are wrapped with two middleware functions. The first enables CSRF protection.
 The second takes care of serializing and deserializing various encoding formats, such as JSON.
 
-<p class="title is-5">Managing your middleware</p>
+#### Managing your middleware
 
 Request middleware functions are located under the `luminusdiff.middleware` namespace.
 
@@ -86,8 +82,6 @@ Middleware used for development is placed in the `luminusdiff.dev-middleware` na
 the `env/dev/clj/` source path.
 
 <a class="level-item button" href="https://luminusweb.com/docs/middleware.html">learn more about middleware »</a>
-
-<div class="bs-callout bs-callout-danger">
 
 #### Database configuration is required
 
@@ -101,11 +95,11 @@ If you haven't already, then please follow the steps below to configure your dat
 
 <a class="btn btn-primary" href="http://www.luminusweb.net/docs/database.md">learn more about database access »</a>
 
-</div>
+#### Generate migrations 
+`lein run create-migration create-user-table`
 
 
-
-<p class="title is-5">Need some help?</p>
+### Need some help?
 
 Visit the [official documentation](https://luminusweb.com/docs/guestbook) for examples
 on how to accomplish common tasks with Luminus. The `#luminus` channel on the [Clojurians Slack](http://clojurians.net/) and [Google Group](https://groups.google.com/forum/#!forum/luminusweb) are both great places to seek help and discuss projects with other users.
