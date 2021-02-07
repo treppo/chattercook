@@ -74,9 +74,11 @@
 
 (defn event [request]
   (let [id (-> request :path-params :id)
-        guests (db/get-guests {:event-id id})]
+        guests (db/get-guests {:event-id id})
+        event (db/get-event {:id id})]
     (layout/render request "event.html"
-                   {:guests (map :name guests)})))
+                   {:creator (domain/possessive (:creator event))
+                    :guests (map :name guests)})))
 
 (defn home-routes []
   [""
