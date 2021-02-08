@@ -1,2 +1,4 @@
 {:prod true
- :port 3000}
+ :port 3000
+ :video-service-domain "8x8.vc"
+ :video-api-url "https://8x8.vc/libs/external_api.min.js"}

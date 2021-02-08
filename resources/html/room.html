@@ -4,9 +4,9 @@
 <main>
     <div id="video"></div>
 </main>
-<script src="https://8x8.vc/libs/external_api.min.js"></script>
+<script src="{{ video-api-url }}"></script>
 <script>
-    const domain = "8x8.vc"
+    const domain = "{{ video-service-domain }}"
     const options = {
         roomName: "{{ tenant }}/{{ room-name }}",
         parentNode: document.querySelector('#video'),
@@ -21,20 +21,7 @@
             ],
         }
     }
-    api = new JitsiMeetExternalAPI(domain, options)
-
-    if (navigator.share) {
-        const shareButton = document.createElement("a")
-        shareButton.href = "#"
-        shareButton.innerText = "Share"
-        shareButton.addEventListener("click", event => {
-            navigator.share({
-                url: "https://chattercook.heroku.com/guest-room",
-                title: "Einladung",
-                text: "Max lädt dich ein zu seiner Kochgruppe. Es wird Trüffelrisotto gekocht.",
-            })
-        })
-        document.querySelector("#video").insertAdjacentElement("afterend", shareButton)
-    }
+    api = new JitsiMeetExternalAPI(domain, options);
+    api.addListener("videoConferenceLeft", (event) => window.location = "/thank-you/");
 </script>
 {% endblock %}

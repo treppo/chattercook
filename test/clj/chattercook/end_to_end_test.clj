@@ -50,4 +50,9 @@
       (is (true? (has-text? browser {:tag :h1} "Max' Kochgruppe")))
       (is (true? (has-text? browser :event-info "Gekocht wird Trüffelrisotto")))
       (is (true? (has-text? browser :event-info "Am 07.02.2021 um 19:30 Uhr")))
-      (is (true? (has-text? browser :guests "Indigo"))))))
+      (is (true? (has-text? browser :guests "Indigo")))
+
+      (go browser (path (get-element-attr browser :video-link :href)))
+      (wait-visible browser :create-event-link)
+      (is (true? (has-text? browser {:tag :h1} "Vielen Dank und toll dass du bei meiner Kochgruppe dabei gewesen bist!")))
+      (is (true? (has-text? browser :create-event-link "Los geht's"))))))

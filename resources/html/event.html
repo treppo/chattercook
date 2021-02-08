@@ -7,6 +7,7 @@
             Am {{ event-date }} um {{ event-time }} Uhr<br>
             Gekocht wird {{ dish }}
         </p>
+        <a href="/room/{{ event-id }}/" class="button" id="video-link">Los geht's</a>
         <h2>Bestätigte Teilnehmer dieser Kochgruppe</h2>
         {% if guests %}
         <ul id="guests">

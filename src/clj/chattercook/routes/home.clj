@@ -17,17 +17,20 @@
       options
       {:api-key-id  (:jaas-api-key-id env)
        :tenant      (:jaas-tenant-name env)
+       :user-id     (str (UUID/randomUUID))
        :private-key (:jaas-private-key env)})))
 
 (defn room [request]
-  (let [room-name "MyRoom"
-        options {:room-name  room-name
+  (let [event-id (-> request :path-params :id)
+        options {:room-name  event-id
                  :moderator? false
-                 :user-id    (str (UUID/randomUUID))
-                 :user-name  (-> request :params :name)}]
-    (layout/render request "room.html" {:jwt       (signed-jwt options)
-                                        :room-name room-name
-                                        :tenant    (:jaas-tenant-name env)})))
+                 :user-name  "Guest"}]
+    (layout/render request "room.html"
+                   {:jwt                  (signed-jwt options)
+                    :room-name            event-id
+                    :video-service-domain (:video-service-domain env)
+                    :video-api-url        (:video-api-url env)
+                    :tenant               (:jaas-tenant-name env)})))
 
 (defn create-event-form [request]
   (layout/render request "create-event.html"
@@ -77,11 +80,15 @@
         guests (db/get-guests {:event-id id})
         event (db/get-event {:id id})]
     (layout/render request "event.html"
-                   {:creator (domain/possessive (:creator event))
-                    :dish (:dish event)
+                   {:creator    (domain/possessive (:creator event))
+                    :dish       (:dish event)
                     :event-date (time/format "dd.MM.yyyy" (:datetime event))
                     :event-time (time/format "HH:mm" (:datetime event))
-                    :guests (map :name guests)})))
+                    :guests     (map :name guests)
+                    :event-id   (:id event)})))
+
+(defn thank-you [request]
+  (layout/render request "thank-you.html"))
 
 (defn home-routes []
   [""
@@ -94,5 +101,6 @@
    ["/join/:id/" {:get join}]
    ["/join/" {:post joined}]
    ["/event/:id/" {:get event}]
-   ["/room/" {:get room}]])
+   ["/room/:id/" {:get room}]
+   ["/thank-you/" {:get thank-you}]])
 
