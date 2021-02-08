@@ -3,7 +3,7 @@
 :root {
     --primary-color: #e7c1c1;
     --secondary-color: #151c33;
-    --font-size: 16px;
+    --font-size: 18px;
 }
 
 html,
@@ -12,7 +12,7 @@ body {
     font-family: 'Playfair Display', serif;
     font-size: var(--font-size);
     color: white;
-    line-height: 1.5em;
+    line-height: 1.556em;
 }
 
 a {
@@ -22,13 +22,10 @@ a {
 
 h1, h2 {
     color: var(--primary-color);
-}
-
-h1 {
-    font-weight: 600;
-    font-size: 1.875rem;
-    margin: 0 auto 3rem auto;
     line-height: 1.2em;
+    font-weight: 600;
+    font-size: 1.667rem;
+    margin: 0 auto 1rem auto;
 }
 
 .brand {
@@ -38,9 +35,9 @@ h1 {
 
 .main {
     margin: auto;
-    margin-top: 2rem;
+    margin-top: 4rem;
     text-align: center;
-    width: 80%;
+    width: 85%;
 }
 
 #video > iframe {
@@ -51,16 +48,21 @@ h1 {
 .button {
     font-family: 'Playfair Display SC', serif;
     padding: 0 1.75rem;
-    line-height: calc(1em + 2 * .75rem);
-    height: calc(1em + 2 * .75rem);
+    line-height: calc(1rem + 1.5rem - 3px);
+    height: calc(1em + 1.5rem);
     display: inline-block;
     background-color: var(--primary-color);
     color: var(--secondary-color);
     text-decoration: none;
-    font-size: 1.3125rem;
+    font-size: 1.167rem;
     border-radius: 1.5em;
     border: none;
     margin: 1.5rem auto;
+    text-transform: lowercase;
+}
+
+button.button {
+    padding-bottom: 6px;
 }
 
 label {
@@ -76,11 +78,12 @@ input, textarea {
     width: calc(100% - 2.5rem);
     margin-bottom: 1.5rem;
     display: block !important;
+    font-size: 16px;
 }
 
 input {
-    height: 3rem;
-    line-height: 3rem;
+    height: 2.778rem;
+    line-height: 2.778rem;
 }
 
 textarea {
@@ -99,4 +102,16 @@ input[type="datetime-local"] {
 ul {
     list-style: none;
     padding: 0;
+}
+
+.text-white {
+    color: white;
+}
+
+.section {
+    margin-bottom: 3.8rem;
+}
+
+.icon {
+    margin-bottom: 0;
 }
