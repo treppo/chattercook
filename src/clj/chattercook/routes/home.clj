@@ -51,7 +51,6 @@
         event (db/get-event {:id id})]
     (layout/render request "event-created.html"
                    {:name            (:creator event)
-                    :possessive-name (domain/possessive (:creator event)),
                     :event-date      (time/format "dd.MM.yyyy" (:datetime event))
                     :event-time      (time/format "HH:mm" (:datetime event))
                     :dish            (:dish event)

@@ -19,9 +19,13 @@
             shareButton.addEventListener("click", event => {
                 navigator
                     .share({
+                        title: "Hey!",
+                        text: "Ich habe eine online Kochgruppe gegründet und Du bist eingeladen!\n" +
+                            "Am {{ event-date }} um {{ event-time }} Uhr\n" +
+                            "Gekocht wird {{ dish }}\n\n" +
+                            "Ich freu' mich, wenn Du dabei bist!\n\n" +
+                            "Liebe Grüße, {{ name }}",
                         url: invitationUrl,
-                        title: "Einladung",
-                        text: "Du wurdest zu {{ possessive-name }} Kochgruppe eingeladen. Es wird {{ dish }} gekocht.",
                     })
                     // ignore, it was just cancelled by user
                     .catch((e) => null);
