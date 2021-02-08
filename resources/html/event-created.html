@@ -21,7 +21,7 @@
                     .share({
                         url: invitationUrl,
                         title: "Einladung",
-                        text: "Du wurdest zu {{ possessive-name }} Kochgruppe eingeladen. Es wird Trüffelrisotto gekocht.",
+                        text: "Du wurdest zu {{ possessive-name }} Kochgruppe eingeladen. Es wird {{ dish }} gekocht.",
                     })
                     // ignore, it was just cancelled by user
                     .catch((e) => null);

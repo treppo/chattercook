@@ -39,9 +39,10 @@
                   :max-date-time       (domain/latest-event-time)}))
 
 (defn create-event [request]
-  (let [event {:creator   (-> request :params :name)
-               :date-time (-> request :params :date-time (LocalDateTime/parse))
-               :dish      (-> request :params :dish)}
+  (let [event {:creator     (-> request :params :name)
+               :date-time   (-> request :params :date-time (LocalDateTime/parse))
+               :dish        (-> request :params :dish)
+               :ingredients (-> request :params :ingredients)}
         id (domain/create-event event)]
     (response/redirect (str "/event-created/" id "/") :see-other)))
 
@@ -85,7 +86,8 @@
                     :event-date (time/format "dd.MM.yyyy" (:datetime event))
                     :event-time (time/format "HH:mm" (:datetime event))
                     :guests     (map :name guests)
-                    :event-id   (:id event)})))
+                    :event-id   (:id event)
+                    :ingredients (:ingredients event)})))
 
 (defn thank-you [request]
   (layout/render request "thank-you.html"))

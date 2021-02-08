@@ -17,19 +17,26 @@
     (migrations/migrate ["migrate"] (select-keys env [:database-url]))
     (f)))
 
+(def event {:id       "abcdefg"
+            :datetime (LocalDateTime/parse "2021-02-09T19:30")
+            :creator  "Christiane"
+            :dish     "Wiener Schnitzel vegan"
+            :ingredients "Kalb\nSemmelbrösel\nEier"})
+
 (deftest test-events
   (jdbc/with-transaction [t-conn *db* {:rollback-only true}]
-                         (db/create-event! t-conn {:id "abcdefg" :datetime (LocalDateTime/parse "2021-02-09T19:30") :creator "Christiane" :dish "Wiener Schnitzel vegan"})
+                         (db/create-event! t-conn event)
 
                          (let [db-event (db/get-event t-conn {:id "abcdefg"} {})]
                            (is (= "abcdefg" (:id db-event)))
                            (is (= "Christiane" (:creator db-event)))
                            (is (= "Wiener Schnitzel vegan" (:dish db-event)))
-                           (is (= (LocalDateTime/parse "2021-02-09T19:30") (:datetime db-event))))))
+                           (is (= (LocalDateTime/parse "2021-02-09T19:30") (:datetime db-event)))
+                           (is (= "Kalb\nSemmelbrösel\nEier" (:ingredients db-event))))))
 
 (deftest test-guests
   (jdbc/with-transaction [t-conn *db* {:rollback-only true}]
-                         (db/create-event! t-conn {:id "abcdefg" :datetime (LocalDateTime/parse "2021-02-09T19:30") :creator "Christiane" :dish "Wiener Schnitzel vegan"})
+                         (db/create-event! t-conn event)
                          (db/add-guest! t-conn {:event-id "abcdefg" :name "Indigo"})
                          (db/add-guest! t-conn {:event-id "abcdefg" :name "Jonas"})
 
