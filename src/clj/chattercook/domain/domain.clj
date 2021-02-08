@@ -5,6 +5,8 @@
     [chattercook.db.core :refer [*db*] :as db])
   (:import (com.devskiller.friendly_id FriendlyId)))
 
+(def early-start-min (time/minutes 30))
+
 (defn possessive [name]
   (if (some (fn [c] (string/ends-with? name c)) ["x" "s" "z" "ß" "ce"])
     (str name "'")
@@ -33,3 +35,6 @@
 
 (defn join [id name]
   (db/add-guest! {:event-id id :name name}))
+
+(defn start-event? [{:keys [datetime]}]
+  (time/before? (time/minus datetime early-start-min) (time/local-date-time)))

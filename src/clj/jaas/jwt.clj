@@ -1,5 +1,5 @@
 (ns jaas.jwt
-  (:require [clojure.java.io :as io])
+  (:require [java-time :as time])
   (:import (com.auth0.jwt JWT)
            (java.time Instant)
            (java.util Base64)
@@ -16,7 +16,7 @@
        (.generatePrivate (KeyFactory/getInstance "RSA"))))
 
 (defn signed-jwt [options]
-  (let [expiration-time (-> (Instant/now) (.plusSeconds expiration-delay) .getEpochSecond)
+  (let [expiration-time (-> (time/instant) (.plusSeconds expiration-delay) .getEpochSecond)
         not-before (.getEpochSecond (Instant/now))
         pem (rsa-private-key (:private-key options))]
     (-> (JWT/create)

@@ -5,11 +5,11 @@
     [chattercook.layout :as layout]
     [chattercook.domain.domain :as domain]
     [chattercook.config :refer [env]]
+    [chattercook.clock :refer [*clock*]]
     [chattercook.middleware :as middleware]
     [ring.util.response :as response]
     [chattercook.db.core :refer [*db*] :as db])
-  (:import (java.util UUID)
-           (java.time LocalDateTime)))
+  (:import (java.util UUID)))
 
 (defn signed-jwt [options]
   (jwt/signed-jwt
@@ -40,7 +40,7 @@
 
 (defn create-event [request]
   (let [event {:creator     (-> request :params :name)
-               :date-time   (-> request :params :date-time (LocalDateTime/parse))
+               :date-time   (-> request :params :date-time time/local-date-time)
                :dish        (-> request :params :dish)
                :ingredients (-> request :params :ingredients)}
         id (domain/create-event event)]
@@ -50,11 +50,11 @@
   (let [id (-> request :path-params :id)
         event (db/get-event {:id id})]
     (layout/render request "event-created.html"
-                   {:name            (:creator event)
-                    :event-date      (time/format "dd.MM.yyyy" (:datetime event))
-                    :event-time      (time/format "HH:mm" (:datetime event))
-                    :dish            (:dish event)
-                    :invitation-url  (str "/join/" id "/")})))
+                   {:name           (:creator event)
+                    :event-date     (time/format "dd.MM.yyyy" (:datetime event))
+                    :event-time     (time/format "HH:mm" (:datetime event))
+                    :dish           (:dish event)
+                    :invitation-url (str "/join/" id "/")})))
 
 (defn redirect-to-create [request]
   (response/redirect "/create-event/"))
@@ -79,14 +79,17 @@
   (let [id (-> request :path-params :id)
         guests (db/get-guests {:event-id id})
         event (db/get-event {:id id})]
-    (layout/render request "event.html"
-                   {:creator    (domain/possessive (:creator event))
-                    :dish       (:dish event)
-                    :event-date (time/format "dd.MM.yyyy" (:datetime event))
-                    :event-time (time/format "HH:mm" (:datetime event))
-                    :guests     (map :name guests)
-                    :event-id   (:id event)
-                    :ingredients (:ingredients event)})))
+    (time/with-clock
+      *clock*
+      (layout/render request "event.html"
+                     {:creator      (domain/possessive (:creator event))
+                      :dish         (:dish event)
+                      :event-date   (time/format "dd.MM.yyyy" (:datetime event))
+                      :event-time   (time/format "HH:mm" (:datetime event))
+                      :start-event? (domain/start-event? event)
+                      :guests       (map :name guests)
+                      :event-id     (:id event)
+                      :ingredients  (:ingredients event)}))))
 
 (defn thank-you [request]
   (layout/render request "thank-you.html"))

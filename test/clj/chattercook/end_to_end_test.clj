@@ -8,11 +8,14 @@
     [mount.core :as mount]
     [etaoin.api :refer :all]
     [etaoin.keys :as keys]
-    [chattercook.db.core :refer [*db*] :as db]))
+    [java-time :as time]))
+
+(def clock (time/mock-clock (time/instant (time/zoned-date-time 2021 2 6 19 30)) "UTC"))
 
 (use-fixtures
   :once
   (fn [f]
+    (mount/start-with {#'chattercook.clock/*clock* clock})
     (mount/start #'chattercook.config/env
                  #'chattercook.handler/app-routes
                  #'chattercook.core/http-server
@@ -26,6 +29,7 @@
   (testing "main route"
     (with-firefox-headless
       {} browser
+
       (doto browser
         (go (path "/create-event/"))
         (fill {:tag :input :name :name} "Max" keys/tab)
@@ -56,6 +60,9 @@
       (is (true? (has-text? browser :ingredients "1 Zwiebel")))
       (is (true? (has-text? browser :ingredients "Trüffelöl")))
       (is (true? (has-text? browser :guests "Indigo")))
+
+      (time/set-clock! clock (time/instant (time/zoned-date-time 2021 2 7 20 20) "UTC"))
+      (refresh browser)
 
       (go browser (path (get-element-attr browser :video-link :href)))
       (wait-visible browser :create-event-link)
