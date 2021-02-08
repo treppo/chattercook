@@ -54,5 +54,6 @@
 
       (go browser (path (get-element-attr browser :video-link :href)))
       (wait-visible browser :create-event-link)
-      (is (true? (has-text? browser {:tag :h1} "Vielen Dank und toll dass du bei meiner Kochgruppe dabei gewesen bist!")))
+      (is (true? (has-text? browser {:tag :h1} "Vielen Dank")))
+      (is (true? (has-text? browser {:tag :h2} "Erstell' jetzt deine eigene Gruppe")))
       (is (true? (has-text? browser :create-event-link "Los geht's"))))))
