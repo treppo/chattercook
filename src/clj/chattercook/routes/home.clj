@@ -82,14 +82,15 @@
     (time/with-clock
       *clock*
       (layout/render request "event.html"
-                     {:creator      (domain/possessive (:creator event))
-                      :dish         (:dish event)
-                      :event-date   (time/format "dd.MM.yyyy" (:datetime event))
-                      :event-time   (time/format "HH:mm" (:datetime event))
-                      :start-event? (domain/start-event? event)
-                      :guests       (map :name guests)
-                      :event-id     (:id event)
-                      :ingredients  (:ingredients event)}))))
+                     {:creator         (domain/possessive (:creator event))
+                      :dish            (:dish event)
+                      :event-date      (time/format "dd.MM.yyyy" (:datetime event))
+                      :event-time      (time/format "HH:mm" (:datetime event))
+                      :event-date-time (:datetime event)
+                      :start-event?    (domain/start-event? event)
+                      :guests          (map :name guests)
+                      :event-id        (:id event)
+                      :ingredients     (:ingredients event)}))))
 
 (defn thank-you [request]
   (layout/render request "thank-you.html"))
