@@ -39,7 +39,8 @@
       (is (true? (has-text? browser :event-info "Gekocht wird Trüffelrisotto")))
 
       (go browser (get-element-value browser :share-link))
-      (is (true? (has-text? browser {:tag :h1} "Du bist zu meiner Kochgruppe eingeladen, ich freu mich auf Dich! Lieben Gruß, Max.")))
+      (is (true? (has-text? browser {:tag :h1} "Du bist zu meiner Kochgruppe eingeladen, ich freu mich auf Dich!")))
+      (is (true? (has-text? browser {:tag :h1} "Lieben Gruß, Max.")))
       (is (true? (has-text? browser :event-info "Gekocht wird Trüffelrisotto")))
       (is (true? (has-text? browser :event-info "Am 07.02.2021 um 19:30 Uhr")))
 
@@ -47,7 +48,8 @@
         (fill {:tag :input :name :name} "Indigo" keys/tab)
         (click {:tag :button :fn/text "Ja, ich bin dabei"}))
 
-      (is (true? (has-text? browser {:tag :h1} "Max' Kochgruppe")))
+      (is (true? (has-text? browser {:tag :h1} "Max'")))
+      (is (true? (has-text? browser {:tag :h1} "Kochgruppe")))
       (is (true? (has-text? browser :event-info "Gekocht wird Trüffelrisotto")))
       (is (true? (has-text? browser :event-info "Am 07.02.2021 um 19:30 Uhr")))
       (is (true? (has-text? browser :ingredients "100g Risottoreis")))
