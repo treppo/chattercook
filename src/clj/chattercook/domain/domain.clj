@@ -29,7 +29,6 @@
     (db/create-event!
       {:id             id
        :creator        creator
-       :datetime       date-time
        :dish           dish
        :ingredients    ingredients
        :offsetdatetime (str offset-date-time)})
@@ -39,7 +38,7 @@
   (let [db-event (db/get-event {:id id})]
     (-> db-event
         (merge {:date-time (time/offset-date-time (:offsetdatetime db-event))})
-        (dissoc :datetime))))
+        (dissoc :offsetdatetime))))
 
 (defn join [id name]
   (db/add-guest! {:event-id id :name name}))
