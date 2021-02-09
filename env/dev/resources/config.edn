@@ -1,1 +1,10 @@
-{}
+{:dev                  true
+ :port                 3000
+ ;; when :nrepl-port is set the application starts the nREPL server on load
+ :nrepl-port           7000
+ :video-service-domain "meet.jit.si"
+ :video-api-url        "https://meet.jit.si/external_api.js"
+ :session-secret       "session-secret16"
+ :database-url         "jdbc:postgresql://localhost/chattercook?user=db_user&password=db_password"
+ :max-cookie-age       60                                   ;;1 minute
+ }

@@ -42,7 +42,7 @@
   (-> ((:middleware defaults) handler)
       wrap-flash
       (wrap-session {:store (cookie-store {:key (:session-secret env)})
-                     :cookie-attrs {:http-only true}})
+                     :cookie-attrs {:http-only true :max-age (:max-cookie-age env)}})
       (wrap-defaults
         (-> site-defaults
             (assoc-in [:security :anti-forgery] false)
