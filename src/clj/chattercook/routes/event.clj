@@ -24,7 +24,7 @@
   (let [event-id (-> request :path-params :id)
         options {:room-name  event-id
                  :moderator? false
-                 :user-name  "Guest"}]
+                 :user-name  (or (get-in request [:session :name]) "Guest")}]
     (layout/render request "room.html"
                    {:jwt                  (signed-jwt options)
                     :room-name            event-id
@@ -66,12 +66,12 @@
 (defn joined [request]
   (let [id (-> request :params :id)
         name (-> request :params :name)
-        session (-> request :session)]
+        session (:session request)]
     (domain/join id name)
     (->
       (str "/event/" id "/")
-      response/redirect
-      (assoc :session (assoc session :user name id true)))))
+      (response/redirect :see-other)
+      (assoc :session (assoc session :name name, id true)))))
 
 (defn event [request]
   (let [id (-> request :path-params :id)
