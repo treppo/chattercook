@@ -71,6 +71,10 @@
     (do
       (migrations/create (second args) (select-keys env [:database-url :init-script]))
       (System/exit 0))
+    (some #{"create-code-migration"} args)
+    (do
+      (migrations/create (second args) (select-keys env [:database-url :init-script]) :edn)
+      (System/exit 0))
     (migrations/migration? args)
     (do
       (migrations/migrate args (select-keys env [:database-url]))

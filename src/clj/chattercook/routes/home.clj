@@ -39,20 +39,23 @@
                   :max-date-time       (domain/latest-event-time)}))
 
 (defn create-event [request]
-  (let [event {:creator     (-> request :params :name)
-               :date-time   (-> request :params :date-time time/local-date-time)
-               :dish        (-> request :params :dish)
-               :ingredients (-> request :params :ingredients)}
+  (let [user-event-time (-> request :params :date-time)
+        offset (-> request :params :timezone-offset)
+        event {:creator          (-> request :params :name)
+               :date-time        (-> request :params :date-time time/local-date-time)
+               :offset-date-time (domain/to-offset-date-time user-event-time offset)
+               :dish             (-> request :params :dish)
+               :ingredients      (-> request :params :ingredients)}
         id (domain/create-event event)]
     (response/redirect (str "/event-created/" id "/") :see-other)))
 
 (defn event-created [request]
   (let [id (-> request :path-params :id)
-        event (db/get-event {:id id})]
+        event (domain/get-event id)]
     (layout/render request "event-created.html"
                    {:name           (:creator event)
-                    :event-date     (time/format "dd.MM.yyyy" (:datetime event))
-                    :event-time     (time/format "HH:mm" (:datetime event))
+                    :event-date     (time/format "dd.MM.yyyy" (:date-time event))
+                    :event-time     (time/format "HH:mm" (:date-time event))
                     :dish           (:dish event)
                     :invitation-url (str "/join/" id "/")})))
 
@@ -61,13 +64,13 @@
 
 (defn join [request]
   (let [id (-> request :path-params :id)
-        event (db/get-event {:id id})]
+        event (domain/get-event id)]
     (layout/render request "join.html"
                    {:id         (:id event)
                     :name       (:creator event)
                     :dish       (:dish event)
-                    :event-date (time/format "dd.MM.yyyy" (:datetime event))
-                    :event-time (time/format "HH:mm" (:datetime event))})))
+                    :event-date (time/format "dd.MM.yyyy" (:date-time event))
+                    :event-time (time/format "HH:mm" (:date-time event))})))
 
 (defn joined [request]
   (let [id (-> request :params :id)
@@ -78,15 +81,15 @@
 (defn event [request]
   (let [id (-> request :path-params :id)
         guests (db/get-guests {:event-id id})
-        event (db/get-event {:id id})]
+        event (domain/get-event id)]
     (time/with-clock
       *clock*
       (layout/render request "event.html"
                      {:creator         (domain/possessive (:creator event))
                       :dish            (:dish event)
-                      :event-date      (time/format "dd.MM.yyyy" (:datetime event))
-                      :event-time      (time/format "HH:mm" (:datetime event))
-                      :event-date-time (:datetime event)
+                      :event-date      (time/format "dd.MM.yyyy" (:date-time event))
+                      :event-time      (time/format "HH:mm" (:date-time event))
+                      :event-date-time (:date-time event)
                       :start-event?    (domain/start-event? event)
                       :guests          (map :name guests)
                       :event-id        (:id event)

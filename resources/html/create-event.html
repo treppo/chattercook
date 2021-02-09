@@ -4,6 +4,7 @@
     <h1>Erstelle deine Kochgruppe</h1>
     <form action="/create-event/" method="post">
         {% csrf-field %}
+        <input type="hidden" name="timezone-offset" id="timezone-offset" value="0">
         <label>
             <input type="text" name="name" placeholder="Vorname" autocomplete="given-name" required>
         </label>
@@ -21,4 +22,7 @@
         <button class="button" type="submit">Weiter geht's</button>
     </form>
 </main>
+<script>
+    document.querySelector("#timezone-offset").value = -1 * new Date().getTimezoneOffset() * 60; // in seconds
+</script>
 {% endblock %}

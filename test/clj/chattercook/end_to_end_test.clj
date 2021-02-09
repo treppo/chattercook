@@ -8,9 +8,10 @@
     [mount.core :as mount]
     [etaoin.api :refer :all]
     [etaoin.keys :as keys]
-    [java-time :as time]))
+    [java-time :as time])
+  (:import (java.time ZoneId)))
 
-(def clock (time/mock-clock (time/instant (time/zoned-date-time 2021 2 6 19 30)) "UTC"))
+(def clock (time/mock-clock (time/instant (time/zoned-date-time 2021 2 6 19 30)) (ZoneId/systemDefault)))
 
 (use-fixtures
   :once
@@ -61,7 +62,7 @@
       (is (true? (has-text? browser :ingredients "Trüffelöl")))
       (is (true? (has-text? browser :guests "Indigo")))
 
-      (time/set-clock! clock (time/instant (time/zoned-date-time 2021 2 7 20 20) "UTC"))
+      (time/set-clock! clock (time/instant (time/zoned-date-time 2021 2 7 19 20) (ZoneId/systemDefault)))
       (refresh browser)
 
       (go browser (path (get-element-attr browser :video-link :href)))

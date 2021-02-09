@@ -17,11 +17,12 @@
     (migrations/migrate ["migrate"] (select-keys env [:database-url]))
     (f)))
 
-(def event {:id       "abcdefg"
-            :datetime (LocalDateTime/parse "2021-02-09T19:30")
-            :creator  "Christiane"
-            :dish     "Wiener Schnitzel vegan"
-            :ingredients "Kalb\nSemmelbrösel\nEier"})
+(def event {:id             "abcdefg"
+            :datetime       (LocalDateTime/parse "2021-02-09T19:30")
+            :offsetdatetime "2021-02-09T19:30-01:00"
+            :creator        "Christiane"
+            :dish           "Wiener Schnitzel vegan"
+            :ingredients    "Kalb\nSemmelbrösel\nEier"})
 
 (deftest test-events
   (jdbc/with-transaction [t-conn *db* {:rollback-only true}]
@@ -32,6 +33,7 @@
                            (is (= "Christiane" (:creator db-event)))
                            (is (= "Wiener Schnitzel vegan" (:dish db-event)))
                            (is (= (LocalDateTime/parse "2021-02-09T19:30") (:datetime db-event)))
+                           (is (= "2021-02-09T19:30-01:00" (:offsetdatetime db-event)))
                            (is (= "Kalb\nSemmelbrösel\nEier" (:ingredients db-event))))))
 
 (deftest test-guests
