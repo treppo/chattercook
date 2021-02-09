@@ -41,7 +41,7 @@
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
       wrap-flash
-      (wrap-session {:store (cookie-store {:key (:session-secret env)})
+      (wrap-session {:store        (cookie-store {:key (byte-array (map byte (:session-secret env)))})
                      :cookie-attrs {:http-only true :max-age (:max-cookie-age env)}})
       (wrap-defaults
         (-> site-defaults
