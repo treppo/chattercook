@@ -10,6 +10,9 @@
         {% if start-event? %}
         <a href="/room/{{ event-id }}/" class="button" id="video-link">Los geht's</a>
         {% else %}
+        <div>
+            <a href="#" class="button" id="share-button">Freunde einladen</a>
+        </div>
         Es geht los in <span id="count-hours"></span> h <span id="count-minutes"></span> min
         {% endif %}
         <p>
@@ -36,9 +39,7 @@
 </main>
 
 <script>
-    const finaleDate = new Date("{{ event-date-time }}").getTime();
-
-    const timer = () => {
+    const timer = (finaleDate) => {
         const now = new Date().getTime();
         const diff = finaleDate - now;
 
@@ -48,7 +49,38 @@
         document.querySelector('#count-hours').textContent = hours;
         document.querySelector('#count-minutes').textContent = minutes;
     }
-    timer();
+    const finaleDate = new Date("{{ event-date-time }}").getTime();
+    timer(finaleDate);
     setInterval(timer, 1000);
+
+    const shareButton = document.querySelector("#share-button");
+    const invitationUrl = window.location.origin + "{{ invitation-url }}";
+
+    if (navigator.share) {
+        shareButton.addEventListener("click", event => {
+            navigator
+                .share({
+                    title: "Hey!",
+                    text: "Ich habe eine online Kochgruppe gegründet und Du bist eingeladen!\n" +
+                        "Am {{ event-date }} um {{ event-time }} Uhr\n" +
+                        "Gekocht wird {{ dish }}\n\n" +
+                        "Ich freu' mich, wenn Du dabei bist!\n\n" +
+                        "Liebe Grüße, {{ name }}",
+                    url: invitationUrl,
+                })
+                // ignore, it was just cancelled by user
+                .catch((e) => null);
+        });
+    } else {
+        const shareLabel = document.createElement("label");
+        shareLabel.innerText = "Freunde einladen:"
+        const shareLink = document.createElement("input");
+        shareLink.id = "share-link";
+        shareLink.value = invitationUrl;
+        shareLink.readOnly = true;
+        shareLabel.insertAdjacentElement("beforeend", shareLink);
+        shareButton.insertAdjacentElement("afterend", shareLabel);
+        shareButton.remove()
+    }
 </script>
 {% endblock %}

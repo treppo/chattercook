@@ -32,13 +32,13 @@
                     :video-api-url        (:video-api-url env)
                     :tenant               (:jaas-tenant-name env)})))
 
-(defn create-event-form [request]
+(defn create-event [request]
   (layout/render request "create-event.html"
                  {:suggested-date-time (domain/suggested-event-time)
                   :min-date-time       (domain/earliest-event-time)
                   :max-date-time       (domain/latest-event-time)}))
 
-(defn create-event [request]
+(defn event-created [request]
   (let [user-event-time (-> request :params :date-time)
         offset (-> request :params :timezone-offset)
         event {:creator          (-> request :params :name)
@@ -47,20 +47,7 @@
                :dish             (-> request :params :dish)
                :ingredients      (-> request :params :ingredients)}
         id (domain/create-event event)]
-    (response/redirect (str "/event-created/" id "/") :see-other)))
-
-(defn event-created [request]
-  (let [id (-> request :path-params :id)
-        event (domain/get-event id)]
-    (layout/render request "event-created.html"
-                   {:name           (:creator event)
-                    :event-date     (time/format "dd.MM.yyyy" (:date-time event))
-                    :event-time     (time/format "HH:mm" (:date-time event))
-                    :dish           (:dish event)
-                    :invitation-url (str "/join/" id "/")})))
-
-(defn redirect-to-create [request]
-  (response/redirect "/create-event/"))
+    (response/redirect (str "/event/" id "/") :see-other)))
 
 (defn join [request]
   (let [id (-> request :path-params :id)
@@ -93,7 +80,8 @@
                       :start-event?    (domain/start-event? event)
                       :guests          (map :name guests)
                       :event-id        (:id event)
-                      :ingredients     (:ingredients event)}))))
+                      :ingredients     (:ingredients event)
+                      :invitation-url  (str "/join/" id "/")}))))
 
 (defn thank-you [request]
   (layout/render request "thank-you.html"))
@@ -102,10 +90,9 @@
   [""
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
-   ["/" {:get redirect-to-create}]
-   ["/create-event" {:get redirect-to-create}]              ; deprecated
-   ["/create-event/" {:get create-event-form :post create-event}]
-   ["/event-created/:id/" {:get event-created}]
+   ["/" {:get (fn [request] (response/redirect "/create-event/"))}]
+   ["/create-event" {:get (fn [request] (response/redirect "/create-event/"))}] ; deprecated
+   ["/create-event/" {:get create-event :post event-created}]
    ["/join/:id/" {:get join}]
    ["/join/" {:post joined}]
    ["/event/:id/" {:get event}]
