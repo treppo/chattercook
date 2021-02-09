@@ -9,8 +9,8 @@
     [chattercook.config :refer [env]]
     [ring.middleware.flash :refer [wrap-flash]]
     [ring.adapter.undertow.middleware.session :refer [wrap-session]]
-    [ring.middleware.defaults :refer [site-defaults wrap-defaults]])
-  )
+    [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+    [ring.middleware.session.cookie :refer [cookie-store]]))
 
 (defn wrap-internal-error [handler]
   (fn [req]
@@ -18,8 +18,8 @@
       (handler req)
       (catch Throwable t
         (log/error t (.getMessage t))
-        (error-page {:status 500
-                     :title "Something very bad has happened!"
+        (error-page {:status  500
+                     :title   "Something very bad has happened!"
                      :message "We've dispatched a team of highly trained gnomes to take care of the problem."})))))
 
 (defn wrap-csrf [handler]
@@ -28,7 +28,7 @@
     {:error-response
      (error-page
        {:status 403
-        :title "Invalid anti-forgery token"})}))
+        :title  "Invalid anti-forgery token"})}))
 
 
 (defn wrap-formats [handler]
@@ -41,7 +41,8 @@
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
       wrap-flash
-      (wrap-session {:cookie-attrs {:http-only true}})
+      (wrap-session {:store (cookie-store {:key (:session-secret env)})
+                     :cookie-attrs {:http-only true}})
       (wrap-defaults
         (-> site-defaults
             (assoc-in [:security :anti-forgery] false)

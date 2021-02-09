@@ -50,20 +50,28 @@
     (response/redirect (str "/event/" id "/") :see-other)))
 
 (defn join [request]
-  (let [id (-> request :path-params :id)
-        event (domain/get-event id)]
-    (layout/render request "join.html"
-                   {:id         (:id event)
-                    :name       (:creator event)
-                    :dish       (:dish event)
-                    :event-date (time/format "dd.MM.yyyy" (:date-time event))
-                    :event-time (time/format "HH:mm" (:date-time event))})))
+  (let [id (get-in request [:path-params :id])
+        joined? (get-in request [:session id])]
+    (if joined?
+      (response/redirect (str "/event/" id "/"))
+
+      (let [event (domain/get-event id)]
+        (layout/render request "join.html"
+                       {:id         (:id event)
+                        :name       (:creator event)
+                        :dish       (:dish event)
+                        :event-date (time/format "dd.MM.yyyy" (:date-time event))
+                        :event-time (time/format "HH:mm" (:date-time event))})))))
 
 (defn joined [request]
   (let [id (-> request :params :id)
-        name (-> request :params :name)]
+        name (-> request :params :name)
+        session (-> request :session)]
     (domain/join id name)
-    (response/redirect (str "/event/" id "/"))))
+    (->
+      (str "/event/" id "/")
+      response/redirect
+      (assoc :session (assoc session :user name id true)))))
 
 (defn event [request]
   (let [id (-> request :path-params :id)
