@@ -82,5 +82,6 @@
       (System/exit 0))
     :else
     (do
+      (mount/start #'chattercook.db.core/*db*)
       (migrations/migrate ["migrate"] (select-keys env [:database-url]))
       (start-app args))))
