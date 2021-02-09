@@ -1,0 +1,3 @@
+{:ns chattercook.migrations.convert-timestamp-offset
+ :up-fn migrate-up
+ :down-fn nil}
