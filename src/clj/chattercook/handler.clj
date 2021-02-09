@@ -2,7 +2,7 @@
   (:require
     [chattercook.middleware :as middleware]
     [chattercook.layout :refer [error-page]]
-    [chattercook.routes.home :refer [home-routes]]
+    [chattercook.routes.event :refer [home-routes]]
     [reitit.ring :as ring]
     [ring.middleware.content-type :refer [wrap-content-type]]
     [ring.middleware.webjars :refer [wrap-webjars]]

@@ -1,4 +1,4 @@
-(ns chattercook.routes.home
+(ns chattercook.routes.event
   (:require
     [java-time :as time]
     [jaas.jwt :as jwt]
