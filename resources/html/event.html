@@ -39,7 +39,8 @@
 </main>
 
 <script>
-    const timer = (finaleDate) => {
+    const finaleDate = new Date("{{ event-date-time }}").getTime();
+    const timer = () => {
         const now = new Date().getTime();
         const diff = finaleDate - now;
 
@@ -49,8 +50,7 @@
         document.querySelector('#count-hours').textContent = hours;
         document.querySelector('#count-minutes').textContent = minutes;
     }
-    const finaleDate = new Date("{{ event-date-time }}").getTime();
-    timer(finaleDate);
+    timer();
     setInterval(timer, 1000);
 
     const shareButton = document.querySelector("#share-button");
