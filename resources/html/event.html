@@ -10,9 +10,6 @@
         {% if start-event? %}
         <a href="/room/{{ event-id }}/" class="button" id="video-link">Los geht's</a>
         {% else %}
-        <div>
-            <a href="#" class="button" id="share-button">Freunde einladen</a>
-        </div>
         Es geht los in <span id="count-hours"></span> h <span id="count-minutes"></span> min
         {% endif %}
         <p>
@@ -21,16 +18,23 @@
                       fill="#fff" fill-rule="evenodd" transform="translate(-175 -362)"/>
             </svg>
         </p>
-        {% if guests %}
         <section class="section">
             <h2>Bestätigte Teilnehmer dieser Kochgruppe</h2>
+            {% if guests|not-empty %}
             <ul id="guests">
                 {% for guest in guests %}
                 <li>{{ guest }}</li>
                 {% endfor %}
             </ul>
+            {% else %}
+            <p>
+                Noch keine Teilnehmer
+            </p>
+            <div>
+                <a href="#" class="button" id="share-button">Freunde einladen</a>
+            </div>
+            {% endif %}
         </section>
-        {% endif %}
         <section class="section">
             <h2>Hier deine Einkaufsliste, vergiss' nicht einzukaufen</h2>
             <p id="ingredients">{{ ingredients|linebreaks-br|safe }}</p>
