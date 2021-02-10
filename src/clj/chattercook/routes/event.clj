@@ -69,7 +69,8 @@
     (time/with-clock
       *clock*
       (layout/render request "event.html"
-                     {:creator         (domain/possessive (:creator event))
+                     {:creators         (domain/possessive (:creator event))
+                      :creator         (:creator event)
                       :dish            (:dish event)
                       :event-date      (time/format "dd.MM.yyyy" (:date-time event))
                       :event-time      (time/format "HH:mm" (:date-time event))

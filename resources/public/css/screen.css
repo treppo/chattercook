@@ -71,7 +71,7 @@ label {
     text-align: left;
 }
 
-input, textarea {
+input, textarea, blockquote {
     background-color: rgba(255, 255, 255, .2);
     border: none;
     color: white;

@@ -84,7 +84,7 @@
 
         (reset-browser)
 
-        (go (get-element-value browser :share-link))
+        (go (get-element-text browser :share-link))
         (is-on-invitation-page)
 
         (join-event)
@@ -108,7 +108,7 @@
         (go (path "/create-event/"))
         (create-event))
 
-      (let [invitation-url (get-element-value browser :share-link)]
+      (let [invitation-url (get-element-text browser :share-link)]
         (doto browser
           (reset-browser)
           (go invitation-url)
