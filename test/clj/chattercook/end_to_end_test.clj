@@ -36,6 +36,9 @@
 
 (defn path [p] (str "http://localhost:3001" p))
 
+(defn reset-browser [browser]
+  (delete-cookies browser))
+
 (defn create-event [browser]
   (doto browser
     (fill {:tag :input :name :name} "Max" keys/tab)
@@ -79,6 +82,8 @@
         (create-event)
         (is-on-event-page)
 
+        (reset-browser)
+
         (go (get-element-value browser :share-link))
         (is-on-invitation-page)
 
@@ -105,6 +110,7 @@
 
       (let [invitation-url (get-element-value browser :share-link)]
         (doto browser
+          (reset-browser)
           (go invitation-url)
 
           (join-event)

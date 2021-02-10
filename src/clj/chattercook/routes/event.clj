@@ -1,36 +1,20 @@
 (ns chattercook.routes.event
   (:require
     [java-time :as time]
-    [jaas.jwt :as jwt]
     [chattercook.layout :as layout]
     [chattercook.domain.domain :as domain]
+    [chattercook.domain.use-cases :as use-cases]
     [chattercook.config :refer [env]]
     [chattercook.clock :refer [*clock*]]
     [chattercook.middleware :as middleware]
     [ring.util.response :as response]
-    [chattercook.db.core :refer [*db*] :as db])
-  (:import (java.util UUID)))
-
-(defn signed-jwt [options]
-  (jwt/signed-jwt
-    (merge
-      options
-      {:api-key-id  (:jaas-api-key-id env)
-       :tenant      (:jaas-tenant-name env)
-       :user-id     (str (UUID/randomUUID))
-       :private-key (:jaas-private-key env)})))
+    [chattercook.db.core :refer [*db*] :as db]))
 
 (defn room [request]
   (let [event-id (-> request :path-params :id)
-        options {:room-name  event-id
-                 :moderator? false
-                 :user-name  (or (get-in request [:session :name]) "Guest")}]
+        session (:session request)]
     (layout/render request "room.html"
-                   {:jwt                  (signed-jwt options)
-                    :room-name            event-id
-                    :video-service-domain (:video-service-domain env)
-                    :video-api-url        (:video-api-url env)
-                    :tenant               (:jaas-tenant-name env)})))
+                   (use-cases/enter-room event-id session env))))
 
 (defn create-event [request]
   (layout/render request "create-event.html"
@@ -41,13 +25,18 @@
 (defn event-created [request]
   (let [user-event-time (-> request :params :date-time)
         offset (-> request :params :timezone-offset)
-        event {:creator          (-> request :params :name)
+        user-name (-> request :params :name)
+        event {:creator          user-name
                :date-time        (-> request :params :date-time time/local-date-time)
                :offset-date-time (domain/to-offset-date-time user-event-time offset)
                :dish             (-> request :params :dish)
                :ingredients      (-> request :params :ingredients)}
-        id (domain/create-event event)]
-    (response/redirect (str "/event/" id "/") :see-other)))
+        id (domain/create-event event)
+        session (:session request)]
+    (->
+      (str "/event/" id "/")
+      (response/redirect :see-other)
+      (assoc :session (assoc session :name user-name, id :moderator)))))
 
 (defn join [request]
   (let [id (get-in request [:path-params :id])
@@ -65,13 +54,13 @@
 
 (defn joined [request]
   (let [id (-> request :params :id)
-        name (-> request :params :name)
+        user-name (-> request :params :name)
         session (:session request)]
-    (domain/join id name)
+    (domain/join id user-name)
     (->
       (str "/event/" id "/")
       (response/redirect :see-other)
-      (assoc :session (assoc session :name name, id true)))))
+      (assoc :session (assoc session :name user-name, id :guest)))))
 
 (defn event [request]
   (let [id (-> request :path-params :id)
