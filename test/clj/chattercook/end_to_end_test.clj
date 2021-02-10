@@ -45,7 +45,7 @@
     (fill {:tag :input :name :date-time} "2021-02-07T19:30" keys/tab)
     (fill {:tag :input :name :dish} "Trüffelrisotto" keys/tab)
     (fill {:tag :textarea :name :ingredients} "100g Risottoreis\n1 Zwiebel\nTrüffelöl" keys/tab)
-    (click {:tag :button :fn/text "Weiter geht's"})))
+    (click {:tag :button :fn/text "Weiter geht’s"})))
 
 (defn join-event [browser]
   (doto browser
@@ -70,7 +70,7 @@
 (defn is-on-thank-you-page [browser]
   (is (true? (has-text? browser {:tag :h1} "Vielen Dank")))
   (is (true? (has-text? browser {:tag :h2} "Erstell’ jetzt deine eigene Gruppe")))
-  (is (true? (has-text? browser :create-event-link "Los geht's"))))
+  (is (true? (has-text? browser :create-event-link "Los geht’s"))))
 
 (deftest test-app
   (testing "main route"
