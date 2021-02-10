@@ -53,7 +53,7 @@
     (click {:tag :button :fn/text "Ja, ich bin dabei"})))
 
 (defn is-on-event-page [browser]
-  (is (true? (has-text? browser {:tag :h1} "Max'")))
+  (is (true? (has-text? browser {:tag :h1} "Max’")))
   (is (true? (has-text? browser {:tag :h1} "Kochgruppe")))
   (is (true? (has-text? browser :event-info "Gekocht wird Trüffelrisotto")))
   (is (true? (has-text? browser :event-info "Am 07.02.2021 um 19:30 Uhr")))
@@ -69,7 +69,7 @@
 
 (defn is-on-thank-you-page [browser]
   (is (true? (has-text? browser {:tag :h1} "Vielen Dank")))
-  (is (true? (has-text? browser {:tag :h2} "Erstell' jetzt deine eigene Gruppe")))
+  (is (true? (has-text? browser {:tag :h2} "Erstell’ jetzt deine eigene Gruppe")))
   (is (true? (has-text? browser :create-event-link "Los geht's"))))
 
 (deftest test-app
