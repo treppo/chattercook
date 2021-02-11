@@ -1,7 +1,5 @@
 (ns chattercook.domain.use-cases
-  (:require [jaas.jwt :as jwt]
-            [chattercook.db.core :refer [*db*] :as db]
-            [chattercook.domain.domain :as domain])
+  (:require [jaas.jwt :as jwt])
   (:import (java.util UUID)))
 
 (defn signed-jwt [options config]
@@ -14,14 +12,11 @@
        :private-key (:jaas-private-key config)})))
 
 (defn enter-room [event-id session config]
-  (let [event (domain/get-event event-id)
-        room-name (str (domain/possessive (:creator event)) " Kochgruppe")
-        options {:room-name  room-name
+  (let [options {:room-name  event-id
                  :moderator? (= :moderator (session event-id))
                  :user-name  (or (:name session) "Guest")}]
-
     {:jwt                  (signed-jwt options config)
-     :room-name            room-name
+     :room-name            event-id
      :video-service-domain (:video-service-domain config)
      :video-api-url        (:video-api-url config)
      :tenant               (:jaas-tenant-name config)}))
