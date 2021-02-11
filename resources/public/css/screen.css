@@ -118,3 +118,8 @@ ul {
 .icon {
     margin-bottom: 0;
 }
+
+.external-video {
+    display: block;
+    width: 100%;
+}
