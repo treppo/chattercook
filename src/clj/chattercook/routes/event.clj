@@ -8,7 +8,12 @@
     [chattercook.clock :refer [*clock*]]
     [chattercook.middleware :as middleware]
     [ring.util.response :as response]
-    [chattercook.db.core :refer [*db*] :as db]))
+    [chattercook.db.core :refer [*db*] :as db])
+  (:import (java.util Date)
+           (java.time ZoneId)))
+
+(defn- base-url [request]
+  (str (name (:scheme request)) "://" (get-in request [:headers "host"])))
 
 (defn room [request]
   (let [event-id (-> request :path-params :id)
@@ -69,7 +74,7 @@
     (time/with-clock
       *clock*
       (layout/render request "event.html"
-                     {:creators         (domain/possessive (:creator event))
+                     {:creators        (domain/possessive (:creator event))
                       :creator         (:creator event)
                       :dish            (:dish event)
                       :event-date      (time/format "dd.MM.yyyy" (:date-time event))
@@ -84,7 +89,23 @@
 (defn thank-you [request]
   (layout/render request "thank-you.html"))
 
-(defn home-routes []
+(defn ical [request]
+  (let [event-id (-> request :path-params :id)
+        config {:invitation-path "/join/"
+                :base-url        (base-url request)}
+        ical (use-cases/download-ical event-id config)
+        last-modified (-> (:last-modified ical)
+                          (.atZone (ZoneId/systemDefault))
+                          .toInstant
+                          Date/from
+                          ring.util.time/format-date)]
+    (-> (response/response (:file ical))
+        (response/header "Content-Length" (alength (.getBytes (:file ical) "UTF-8")))
+        (response/header "Content-Type" "text/calendar")
+        (response/header "Content-Disposition" (str "attachment; filename=\"kochen.ics\""))
+        (response/header "Last-Modified" last-modified))))
+
+(defn event-routes []
   [""
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
@@ -95,5 +116,6 @@
    ["/join/" {:post joined}]
    ["/event/:id/" {:get event}]
    ["/room/:id/" {:get room}]
-   ["/thank-you/" {:get thank-you}]])
+   ["/thank-you/" {:get thank-you}]
+   ["/ical/:id/" {:get ical}]])
 

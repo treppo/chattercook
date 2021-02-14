@@ -59,7 +59,8 @@
   (is (true? (has-text? browser :event-info "Am 07.02.2021 um 19:30 Uhr")))
   (is (true? (has-text? browser :ingredients "100g Risottoreis")))
   (is (true? (has-text? browser :ingredients "1 Zwiebel")))
-  (is (true? (has-text? browser :ingredients "Trüffelöl"))))
+  (is (true? (has-text? browser :ingredients "Trüffelöl")))
+  (is (re-find #"/ical/[\w\d]+/" (get-element-attr browser :ical-link :href))))
 
 (defn is-on-invitation-page [browser]
   (is (true? (has-text? browser {:tag :h1} "Du bist zu meiner Kochgruppe eingeladen, ich freu mich auf Dich!")))

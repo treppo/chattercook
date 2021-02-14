@@ -1,6 +1,12 @@
 (ns chattercook.domain.use-cases
-  (:require [jaas.jwt :as jwt])
-  (:import (java.util UUID)))
+  (:require [jaas.jwt :as jwt]
+            [chattercook.db.core :refer [*db*] :as db]
+            [chattercook.domain.domain :as domain]
+            [java-time :as time])
+  (:import (java.util UUID)
+           (biweekly.component VEvent)
+           (biweekly ICalendar Biweekly)
+           (biweekly.util Duration)))
 
 (defn signed-jwt [options config]
   (jwt/signed-jwt
@@ -20,3 +26,23 @@
      :video-service-domain (:video-service-domain config)
      :video-api-url        (:video-api-url config)
      :tenant               (:jaas-tenant-name config)}))
+
+(defn download-ical [event-id config]
+  (let [event (db/get-event {:id event-id})
+        vevent (VEvent.)
+        ical (ICalendar.)]
+    (doto vevent
+      (.setSummary (domain/event-name event))
+      (.setDateStart (time/java-date (domain/date-time event)))
+      (.setDuration (Duration/parse "PT1H30M"))
+      (.setDescription (str (domain/dish-description event)
+                            "\n\n"
+                            (domain/ingredients-description event)
+                            "\n\n"
+                            "Ich freu mich auf dich!"))
+      (.setUrl (str (:base-url config) (:invitation-path config) (:id event) "/")))
+    (.addEvent ical vevent)
+
+    {:file (.go (Biweekly/write [ical]))
+     :last-modified (:created_at event)}))
+

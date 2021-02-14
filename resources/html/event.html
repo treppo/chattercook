@@ -10,7 +10,7 @@
         {% if start-event? %}
         <a href="/room/{{ event-id }}/" class="button" id="video-link">Los geht’s</a>
         {% else %}
-        Es geht los in <span id="count-hours"></span> h <span id="count-minutes"></span> min
+        <a href="/ical/{{ event-id }}/" id="ical-link" class="button">Add to calendar</a>
         {% endif %}
         <p>
             <svg height="19" viewBox="0 0 24 19" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -32,7 +32,7 @@
             </p>
             {% if not start-event? %}
             <div>
-                <a href="#" class="button" id="share-button">Freunde einladen</a>
+                <a href="#" class="button" id="share-link">Freunde einladen</a>
             </div>
             {% endif %}
             {% endif %}
@@ -52,21 +52,7 @@
 </main>
 
 <script>
-    const finaleDate = new Date("{{ event-date-time }}").getTime();
-    const timer = () => {
-        const now = new Date().getTime();
-        const diff = finaleDate - now;
-
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor(diff % (1000 * 60 * 60) / (1000 * 60));
-
-        document.querySelector('#count-hours').textContent = hours;
-        document.querySelector('#count-minutes').textContent = minutes;
-    }
-    timer();
-    setInterval(timer, 1000);
-
-    const shareButton = document.querySelector("#share-button");
+    const shareButton = document.querySelector("#share-link");
     const invitationTitle = "Hey!\n\n";
     const invitationText = "Ich habe eine online Kochgruppe gegründet und Du bist eingeladen!\n" +
         "Am {{ event-date }} um {{ event-time }} Uhr\n" +

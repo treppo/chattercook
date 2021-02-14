@@ -30,7 +30,8 @@
                  [ring/ring-defaults "0.3.2"]
                  [selmer "1.12.33"]
                  [com.auth0/java-jwt "3.12.1"]
-                 [com.devskiller.friendly-id/friendly-id "1.1.0"]]
+                 [com.devskiller.friendly-id/friendly-id "1.1.0"]
+                 [net.sf.biweekly/biweekly "0.6.6"]]
 
   :min-lein-version "2.0.0"
 

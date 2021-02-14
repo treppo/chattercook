@@ -4,7 +4,7 @@
     [clojure.string :as string]
     [chattercook.db.core :refer [*db*] :as db])
   (:import (com.devskiller.friendly_id FriendlyId)
-           (java.time ZoneOffset)))
+           (java.time ZoneOffset OffsetDateTime)))
 
 (def early-start-min (time/minutes 30))
 
@@ -51,3 +51,16 @@
        Integer/parseInt
        ZoneOffset/ofTotalSeconds
        (.atOffset (time/local-date-time local-date-time))))
+
+(defn event-name [event]
+  (str (possessive (:creator event)) " Kochgruppe"))
+
+(defn date-time [event]
+  (OffsetDateTime/parse (:offsetdatetime event)))
+
+(defn dish-description [event]
+  (str "Gekocht wird " (:dish event)))
+
+(defn ingredients-description [event]
+  (str "Hier deine Einkaufsliste, vergiss nicht einzukaufen:\n"
+       (:ingredients event)))
