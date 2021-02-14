@@ -1,11 +1,12 @@
 (ns chattercook.db.core-test
   (:require
-    [chattercook.db.core :refer [*db*] :as db]
-    [luminus-migrations.core :as migrations]
-    [clojure.test :refer :all]
-    [next.jdbc :as jdbc]
     [chattercook.config :refer [env]]
-    [mount.core :as mount]))
+    [chattercook.db.core :refer [*db*] :as db]
+    [clojure.test :refer :all]
+    [luminus-migrations.core :as migrations]
+    [mount.core :as mount]
+    [next.jdbc :as jdbc]))
+
 
 (use-fixtures
   :once
@@ -16,11 +17,14 @@
     (migrations/migrate ["migrate"] (select-keys env [:database-url]))
     (f)))
 
-(def event {:id             "abcdefg"
-            :offsetdatetime "2021-02-09T19:30-01:00"
-            :creator        "Christiane"
-            :dish           "Wiener Schnitzel vegan"
-            :ingredients    "Kalb\nSemmelbrösel\nEier"})
+
+(def event
+  {:id             "abcdefg"
+   :offsetdatetime "2021-02-09T19:30-01:00"
+   :creator        "Christiane"
+   :dish           "Wiener Schnitzel vegan"
+   :ingredients    "Kalb\nSemmelbrösel\nEier"})
+
 
 (deftest test-events
   (jdbc/with-transaction [t-conn *db* {:rollback-only true}]
@@ -32,6 +36,7 @@
                            (is (= "Wiener Schnitzel vegan" (:dish db-event)))
                            (is (= "2021-02-09T19:30-01:00" (:offsetdatetime db-event)))
                            (is (= "Kalb\nSemmelbrösel\nEier" (:ingredients db-event))))))
+
 
 (deftest test-guests
   (jdbc/with-transaction [t-conn *db* {:rollback-only true}]

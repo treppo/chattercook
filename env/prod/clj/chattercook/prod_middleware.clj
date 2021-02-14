@@ -2,6 +2,7 @@
   (:require
     [ring.util.response :as response]))
 
+
 (defn wrap-force-ssl
   "Almost like in lib-noir.
    If the request's scheme is not https [and is for 'secure.'], redirect with https.

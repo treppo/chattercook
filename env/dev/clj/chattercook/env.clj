@@ -1,8 +1,9 @@
 (ns chattercook.env
   (:require
-    [selmer.parser :as parser]
+    [chattercook.dev-middleware :refer [wrap-dev]]
     [clojure.tools.logging :as log]
-    [chattercook.dev-middleware :refer [wrap-dev]]))
+    [selmer.parser :as parser]))
+
 
 (def defaults
   {:init

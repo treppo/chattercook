@@ -43,6 +43,8 @@
 
   :plugins []
 
+  :aliases {"cljstyle" ["with-profile" "+cljstyle" "run" "-m" "cljstyle.main"]}
+
   :profiles
   {:uberjar       {:omit-source    true
                    :aot            :all
@@ -71,4 +73,5 @@
    :project/test  {:jvm-opts       ["-Dconf=test-config.edn"]
                    :resource-paths ["env/test/resources"]}
    :profiles/dev  {}
-   :profiles/test {}})
+   :profiles/test {}
+   :cljstyle      {:dependencies [[mvxcvi/cljstyle "0.14.0" :exclusions [org.clojure/clojure]]]}})

@@ -1,21 +1,34 @@
 (ns jaas.jwt
-  (:require [java-time :as time])
-  (:import (com.auth0.jwt JWT)
-           (java.time Instant)
-           (java.util Base64)
-           (com.auth0.jwt.algorithms Algorithm)
-           (java.security.spec PKCS8EncodedKeySpec)
-           (java.security KeyFactory)))
+  (:require
+    [java-time :as time])
+  (:import
+    (com.auth0.jwt
+      JWT)
+    (com.auth0.jwt.algorithms
+      Algorithm)
+    (java.security
+      KeyFactory)
+    (java.security.spec
+      PKCS8EncodedKeySpec)
+    (java.time
+      Instant)
+    (java.util
+      Base64)))
+
 
 (def expiration-delay 7200)
 
-(defn rsa-private-key [^String pem]
+
+(defn rsa-private-key
+  [^String pem]
   (->> pem
        (.decode (Base64/getDecoder))
        PKCS8EncodedKeySpec.
        (.generatePrivate (KeyFactory/getInstance "RSA"))))
 
-(defn signed-jwt [options]
+
+(defn signed-jwt
+  [options]
   (let [expiration-time (-> (time/instant) (.plusSeconds expiration-delay) .getEpochSecond)
         not-before (.getEpochSecond (Instant/now))
         pem (rsa-private-key (:private-key options))]

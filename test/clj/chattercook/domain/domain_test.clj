@@ -1,6 +1,8 @@
 (ns chattercook.domain.domain-test
-  (:require [clojure.test :refer :all])
-  (:require [chattercook.domain.domain :refer [possessive]]))
+  (:require
+    [chattercook.domain.domain :refer [possessive]]
+    [clojure.test :refer :all]))
+
 
 (deftest event-name-test
   (is (= "Max’" (possessive "Max")))

@@ -1,14 +1,23 @@
 (ns chattercook.domain.use-cases
-  (:require [jaas.jwt :as jwt]
-            [chattercook.db.core :refer [*db*] :as db]
-            [chattercook.domain.domain :as domain]
-            [java-time :as time])
-  (:import (java.util UUID)
-           (biweekly.component VEvent)
-           (biweekly ICalendar Biweekly)
-           (biweekly.util Duration)))
+  (:require
+    [chattercook.db.core :refer [*db*] :as db]
+    [chattercook.domain.domain :as domain]
+    [jaas.jwt :as jwt]
+    [java-time :as time])
+  (:import
+    (biweekly
+      Biweekly
+      ICalendar)
+    (biweekly.component
+      VEvent)
+    (biweekly.util
+      Duration)
+    (java.util
+      UUID)))
 
-(defn signed-jwt [options config]
+
+(defn signed-jwt
+  [options config]
   (jwt/signed-jwt
     (merge
       options
@@ -17,7 +26,9 @@
        :user-id     (str (UUID/randomUUID))
        :private-key (:jaas-private-key config)})))
 
-(defn enter-room [event-id session config]
+
+(defn enter-room
+  [event-id session config]
   (let [options {:room-name  event-id
                  :moderator? (= :moderator (session event-id))
                  :user-name  (or (:name session) "Guest")}]
@@ -27,7 +38,9 @@
      :video-api-url        (:video-api-url config)
      :tenant               (:jaas-tenant-name config)}))
 
-(defn download-ical [event-id config]
+
+(defn download-ical
+  [event-id config]
   (let [event (db/get-event {:id event-id})
         vevent (VEvent.)
         ical (ICalendar.)]

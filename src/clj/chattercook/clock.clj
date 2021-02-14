@@ -1,7 +1,9 @@
 (ns chattercook.clock
-  (:require [mount.core :as mount]
-            [java-time :as time])
-  (:gen-class))
+  (:gen-class)
+  (:require
+    [java-time :as time]
+    [mount.core :as mount]))
+
 
 (mount/defstate ^:dynamic *clock*
                 :start (time/system-clock "UTC"))

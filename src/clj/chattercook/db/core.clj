@@ -1,14 +1,17 @@
 (ns chattercook.db.core
   (:require
+    [chattercook.config :refer [env]]
     [cheshire.core :refer [generate-string parse-string]]
-    [next.jdbc.date-time]
-    [next.jdbc.prepare]
-    [next.jdbc.result-set]
     [clojure.tools.logging :as log]
     [conman.core :as conman]
-    [chattercook.config :refer [env]]
-    [mount.core :refer [defstate]])
-  (:import (org.postgresql.util PGobject)))
+    [mount.core :refer [defstate]]
+    [next.jdbc.date-time]
+    [next.jdbc.prepare]
+    [next.jdbc.result-set])
+  (:import
+    (org.postgresql.util
+      PGobject)))
+
 
 (defstate ^:dynamic *db*
   :start (if-let [jdbc-url (env :database-url)]
@@ -18,9 +21,12 @@
              *db*))
   :stop (conman/disconnect! *db*))
 
+
 (conman/bind-connection *db* "sql/queries.sql")
 
-(defn pgobj->clj [^org.postgresql.util.PGobject pgobj]
+
+(defn pgobj->clj
+  [^org.postgresql.util.PGobject pgobj]
   (let [type (.getType pgobj)
         value (.getValue pgobj)]
     (case type
@@ -31,6 +37,7 @@
 
 ; converts java.sql.Timestamps to LocalDateTime
 (next.jdbc.date-time/read-as-local)
+
 
 (extend-protocol next.jdbc.result-set/ReadableColumn
   java.sql.Array
@@ -44,10 +51,13 @@
   (read-column-by-index [^org.postgresql.util.PGobject pgobj _2 _3]
     (pgobj->clj pgobj)))
 
-(defn clj->jsonb-pgobj [value]
+
+(defn clj->jsonb-pgobj
+  [value]
   (doto (PGobject.)
     (.setType "jsonb")
     (.setValue (generate-string value))))
+
 
 (extend-protocol next.jdbc.prepare/SettableParameter
   clojure.lang.IPersistentMap

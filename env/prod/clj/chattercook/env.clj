@@ -1,6 +1,8 @@
 (ns chattercook.env
-  (:require [clojure.tools.logging :as log]
-            [chattercook.prod-middleware :refer [wrap-force-ssl]]))
+  (:require
+    [chattercook.prod-middleware :refer [wrap-force-ssl]]
+    [clojure.tools.logging :as log]))
+
 
 (def defaults
   {:init       (fn []

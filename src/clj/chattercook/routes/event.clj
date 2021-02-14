@@ -1,33 +1,44 @@
 (ns chattercook.routes.event
   (:require
-    [java-time :as time]
-    [chattercook.layout :as layout]
+    [chattercook.clock :refer [*clock*]]
+    [chattercook.config :refer [env]]
+    [chattercook.db.core :refer [*db*] :as db]
     [chattercook.domain.domain :as domain]
     [chattercook.domain.use-cases :as use-cases]
-    [chattercook.config :refer [env]]
-    [chattercook.clock :refer [*clock*]]
+    [chattercook.layout :as layout]
     [chattercook.middleware :as middleware]
-    [ring.util.response :as response]
-    [chattercook.db.core :refer [*db*] :as db])
-  (:import (java.util Date)
-           (java.time ZoneId)))
+    [java-time :as time]
+    [ring.util.response :as response])
+  (:import
+    (java.time
+      ZoneId)
+    (java.util
+      Date)))
 
-(defn- base-url [request]
+
+(defn- base-url
+  [request]
   (str (name (:scheme request)) "://" (get-in request [:headers "host"])))
 
-(defn room [request]
+
+(defn room
+  [request]
   (let [event-id (-> request :path-params :id)
         session (:session request)]
     (layout/render request "room.html"
                    (use-cases/enter-room event-id session env))))
 
-(defn create-event [request]
+
+(defn create-event
+  [request]
   (layout/render request "create-event.html"
                  {:suggested-date-time (domain/suggested-event-time)
                   :min-date-time       (domain/earliest-event-time)
                   :max-date-time       (domain/latest-event-time)}))
 
-(defn event-created [request]
+
+(defn event-created
+  [request]
   (let [user-event-time (-> request :params :date-time)
         offset (-> request :params :timezone-offset)
         user-name (-> request :params :name)
@@ -43,7 +54,9 @@
       (response/redirect :see-other)
       (assoc :session (assoc session :name user-name, id :moderator)))))
 
-(defn join [request]
+
+(defn join
+  [request]
   (let [id (get-in request [:path-params :id])
         joined? (get-in request [:session id])]
     (if joined?
@@ -57,7 +70,9 @@
                         :event-date (time/format "dd.MM.yyyy" (:date-time event))
                         :event-time (time/format "HH:mm" (:date-time event))})))))
 
-(defn joined [request]
+
+(defn joined
+  [request]
   (let [id (-> request :params :id)
         user-name (-> request :params :name)
         session (:session request)]
@@ -67,7 +82,9 @@
       (response/redirect :see-other)
       (assoc :session (assoc session :name user-name, id :guest)))))
 
-(defn event [request]
+
+(defn event
+  [request]
   (let [id (-> request :path-params :id)
         guests (db/get-guests {:event-id id})
         event (domain/get-event id)]
@@ -86,10 +103,14 @@
                       :ingredients     (:ingredients event)
                       :invitation-url  (str "/join/" id "/")}))))
 
-(defn thank-you [request]
+
+(defn thank-you
+  [request]
   (layout/render request "thank-you.html"))
 
-(defn ical [request]
+
+(defn ical
+  [request]
   (let [event-id (-> request :path-params :id)
         config {:invitation-path "/join/"
                 :base-url        (base-url request)}
@@ -105,7 +126,9 @@
         (response/header "Content-Disposition" (str "attachment; filename=\"kochen.ics\""))
         (response/header "Last-Modified" last-modified))))
 
-(defn event-routes []
+
+(defn event-routes
+  []
   [""
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
