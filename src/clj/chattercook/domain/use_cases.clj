@@ -9,11 +9,13 @@
       Biweekly
       ICalendar)
     (biweekly.component
-      VEvent)
+      VEvent VAlarm)
     (biweekly.util
       Duration)
     (java.util
-      UUID)))
+      UUID)
+    (biweekly.property Trigger)
+    (biweekly.parameter Related)))
 
 
 (defn signed-jwt
@@ -43,6 +45,7 @@
   [event-id config]
   (let [event (db/get-event {:id event-id})
         vevent (VEvent.)
+        valarm (VAlarm/display (Trigger. (Duration/parse "-PT0H30M"), Related/START) "Bald geht’s los!")
         ical (ICalendar.)]
     (doto vevent
       (.setSummary (domain/event-name event))
@@ -53,7 +56,8 @@
                             (domain/ingredients-description event)
                             "\n\n"
                             "Ich freu mich auf dich!"))
-      (.setUrl (str (:base-url config) (:invitation-path config) (:id event) "/")))
+      (.setUrl (str (:base-url config) (:invitation-path config) (:id event) "/"))
+      (.addAlarm valarm))
     (.addEvent ical vevent)
 
     {:file (.go (Biweekly/write [ical]))

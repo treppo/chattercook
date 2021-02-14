@@ -102,6 +102,25 @@
       .getValue))
 
 
+(defn alarm-trigger
+  [^String ical]
+  (-> (get-event ical)
+      .getAlarms
+      first
+      .getTrigger
+      .getDuration
+      str))
+
+
+(defn alarm-description
+  [^String ical]
+  (-> (get-event ical)
+      .getAlarms
+      first
+      .getDescription
+      .getValue))
+
+
 (def event-description
   (str "Gekocht wird Wiener Schnitzel vegan\n\n"
        "Hier deine Einkaufsliste, vergiss nicht einzukaufen:\n"
@@ -129,4 +148,6 @@
         (is (= "PT1H30M" (duration ical)))
         (is (= event-description (description ical)))
         (is (= "http://localhost:3000/join/event-id/" (url ical)))
+        (is (= "-PT0H30M" (alarm-trigger ical)))
+        (is (= "Bald geht’s los!" (alarm-description ical)))
         (is (= (LocalDateTime/of 2021 02 07 18 35) (:last-modified response)))))))
